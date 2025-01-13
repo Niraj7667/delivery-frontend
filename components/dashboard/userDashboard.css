@@ -1,0 +1,98 @@
+body {
+    font-family: "Arial", sans-serif;
+    margin: 0;
+  }
+  
+  .user-dashboard {
+    text-align: center;
+    background: #f8f9fa;
+    color: #333;
+  }
+  
+  .header {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: white;
+    padding: 20px 0;
+  }
+  
+  .header h1 {
+    font-size: 2rem;
+  }
+  
+  .header p {
+    font-size: 1.2rem;
+  }
+  
+  .restaurant-list {
+    padding: 20px;
+  }
+  
+  .restaurant-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .restaurant-list li {
+    background: white;
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+  
+  .restaurant-list li:hover {
+    transform: translateY(-3px);
+  }
+  
+  .restaurant-list h3 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .restaurant-list p {
+    margin: 5px 0;
+    color: #666;
+  }
+  
+  .restaurant-list span {
+    color: #ff7e5f;
+    font-weight: bold;
+  }
+  
+  .orders {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  .live-orders, .order-history {
+    width: 45%;
+    background: white;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .orders h2 {
+    color: #ff7e5f;
+  }
+  
+  .orders ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .orders li {
+    border-bottom: 1px solid #ddd;
+    padding: 10px 0;
+  }
+  
+  .error-message {
+    color: red;
+    font-weight: bold;
+    margin-top: 20px;
+  }
+  
