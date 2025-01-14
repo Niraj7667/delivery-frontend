@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const OrderManagement = () => {
-  const [activeOrders, setActiveOrders] = useState([]);
-  const [orderHistory, setOrderHistory] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('PENDING');
+
+  const ORDER_STATUSES = ['PENDING', 'PREPARING', 'READY', 'COMPLETED', 'CANCELLED'];
+  const ACTIVE_STATUSES = ['PENDING', 'PREPARING', 'READY'];
 
   const fetchOrders = async () => {
     try {
@@ -19,34 +22,17 @@ const OrderManagement = () => {
         Authorization: `restauranttoken ${token}`,
       };
 
-      // Fetch both active and inactive orders
       const [activeResponse, inactiveResponse] = await Promise.all([
-        axios.get(`${import.meta.env.VITE_API_URL}/order/restaurant`, { 
-            headers : {
-                Authorization: `restauranttoken ${token}`,
-              }
-         }),
-        axios.get(`${import.meta.env.VITE_API_URL}/order/inactive`, { 
-            headers : {
-                Authorization: `restauranttoken ${token}`,
-              }
-         })
+        axios.get(`${import.meta.env.VITE_API_URL}/order/restaurant`, { headers }),
+        axios.get(`${import.meta.env.VITE_API_URL}/order/inactive`, { headers })
       ]);
 
-      const activeOrders = activeResponse.data;
-      const inactiveOrders = inactiveResponse.data;
+      const allOrders = [
+        ...activeResponse.data,
+        ...inactiveResponse.data
+      ];
 
-      setActiveOrders(activeOrders.filter(order => 
-        order.status !== 'COMPLETED' && order.status !== 'CANCELLED'
-      ));
-      
-      setOrderHistory([
-        ...inactiveOrders,
-        ...activeOrders.filter(order => 
-          order.status === 'COMPLETED' || order.status === 'CANCELLED'
-        )
-      ]);
-
+      setOrders(allOrders);
       setLoading(false);
     } catch (err) {
       setError('Failed to fetch orders');
@@ -56,31 +42,34 @@ const OrderManagement = () => {
 
   useEffect(() => {
     fetchOrders();
-    const interval = setInterval(fetchOrders, 30000); // Poll every 30 seconds
+    const interval = setInterval(fetchOrders, 30000);
     return () => clearInterval(interval);
   }, []);
 
   const handleStatusUpdate = async (orderId, newStatus) => {
     try {
-        
-        const token = localStorage.getItem('restauranttoken');
-        if (!token) {
-            setError('No restaurant token found');
-            return;
-          }
+      const token = localStorage.getItem('restauranttoken');
+      if (!token) {
+        setError('No restaurant token found');
+        return;
+      }
 
-      await axios.put(`${import.meta.env.VITE_API_URL}/order/updatestatus/${orderId}`, { status: newStatus },{
-        headers: {
+      await axios.put(
+        `${import.meta.env.VITE_API_URL}/order/updatestatus/${orderId}`,
+        { status: newStatus },
+        {
+          headers: {
             Authorization: `restauranttoken ${token}`,
           },
-      });
+        }
+      );
       fetchOrders();
     } catch (err) {
       setError('Failed to update order status');
     }
   };
 
-  const OrderCard = ({ order, showStatusUpdate = false }) => (
+  const OrderCard = ({ order }) => (
     <div className="bg-white p-6 rounded-lg shadow-md mb-4">
       <div className="flex justify-between items-start mb-4">
         <div>
@@ -121,7 +110,7 @@ const OrderManagement = () => {
         {order.mealTime && <p className="text-gray-600">Meal Time: {new Date(order.mealTime).toLocaleString()}</p>}
       </div>
 
-      {showStatusUpdate && (
+      {ACTIVE_STATUSES.includes(order.status) && (
         <div className="flex gap-2">
           {order.status === 'PENDING' && (
             <button
@@ -147,14 +136,12 @@ const OrderManagement = () => {
               Complete Order
             </button>
           )}
-          {order.status !== 'CANCELLED' && order.status !== 'COMPLETED' && (
-            <button
-              onClick={() => handleStatusUpdate(order.orderId, 'CANCELLED')}
-              className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-            >
-              Cancel Order
-            </button>
-          )}
+          <button
+            onClick={() => handleStatusUpdate(order.orderId, 'CANCELLED')}
+            className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+          >
+            Cancel Order
+          </button>
         </div>
       )}
     </div>
@@ -163,28 +150,38 @@ const OrderManagement = () => {
   if (loading) return <div className="p-8">Loading...</div>;
   if (error) return <div className="p-8 text-red-600">{error}</div>;
 
+  const filteredOrders = orders.filter(order => order.status === activeTab);
+
   return (
     <div className="min-h-screen bg-gray-100 p-8">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Order Management</h1>
 
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold mb-4">Active Orders ({activeOrders.length})</h2>
-          {activeOrders.length === 0 ? (
-            <p className="text-gray-600">No active orders</p>
-          ) : (
-            activeOrders.map(order => (
-              <OrderCard key={order.orderId} order={order} showStatusUpdate={true} />
-            ))
-          )}
+        <div className="bg-white rounded-lg p-4 mb-6">
+          <div className="flex gap-2">
+            {ORDER_STATUSES.map(status => (
+              <button
+                key={status}
+                onClick={() => setActiveTab(status)}
+                className={`px-4 py-2 rounded-lg ${
+                  activeTab === status
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                {status} ({orders.filter(order => order.status === status).length})
+              </button>
+            ))}
+          </div>
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold mb-4">Order History ({orderHistory.length})</h2>
-          {orderHistory.length === 0 ? (
-            <p className="text-gray-600">No order history</p>
+          {filteredOrders.length === 0 ? (
+            <p className="text-gray-600">No orders in {activeTab} status</p>
           ) : (
-            orderHistory.map(order => <OrderCard key={order.orderId} order={order} />)
+            filteredOrders.map(order => (
+              <OrderCard key={order.orderId} order={order} />
+            ))
           )}
         </div>
       </div>

@@ -1,8 +1,54 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useState,useEffect } from 'react';
+import QRCodeGenerator from '../restaurantManage/qrCode';
+import axios from 'axios';
+
 
 const RestaurantDashboard = () => {
+
+  const [menuItems, setMenuItems] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [editingItem, setEditingItem] = useState(null);
+    const [restaurantId, setRestaurantId] = useState(null);
+    const [successMessage, setSuccessMessage] = useState('');
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const getRestaurantId = async () => {
+      try { 
+        const token = localStorage.getItem('restauranttoken');
+        
+        if (!token) {
+          setError('No restaurant token found');
+          setLoading(false);
+          return;
+        }
+        
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/auth/check/restaurant`, {
+          headers: {
+            Authorization: `restauranttoken ${token}`,
+          },
+        });
+
+        if (response.data && response.data.restaurantId) {
+          setRestaurantId(response.data.restaurantId);
+        } else {
+          setError('Restaurant ID not found in response');
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error('Token verification error:', err);
+        setError('Failed to verify restaurant token');
+        setLoading(false);
+      }
+    };
+
+    getRestaurantId();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -31,6 +77,7 @@ const RestaurantDashboard = () => {
           </div>
           </button>
         </div>
+        <QRCodeGenerator restaurantId={restaurantId} />
       </div>
     </div>
   );
