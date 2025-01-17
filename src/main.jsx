@@ -15,7 +15,7 @@ import RestaurantDashboard from '../components/dashboard/restaurantDashboard.jsx
 import MenuManagement from '../components/restaurantManage/menuManagement.jsx';
 import OrderManagement from '../components/restaurantManage/orderManagement.jsx';
 import Menu from '../components/menu/menu.jsx';
-import Orders from '../components/dashboard/UserOrders.jsx';
+import OrdersWithCategories from '../components/dashboard/UserOrders.jsx';
 import { PublicMenu } from '../components/restaurantManage/qrCode.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -33,7 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path="/auth/restaurant/signup" element={<RestaurantSignup />} />
       <Route path="/auth/restaurant/login" element={<RestaurantLogin />} />
       <Route path="/user/menu" element={<Menu/>} />
-      <Route path="/user/orders" element={<Orders/>} />
+      <Route path="/user/orders" element={<OrdersWithCategories/>} />
       <Route path="/menu/public/:restaurantId" element={<PublicMenu/>} />
         {/* 
         

@@ -4,7 +4,7 @@ import { Card, CardContent } from "../ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const OrdersWithCategories = () => {
+export const OrdersWithCategories = () => {
   const [orders, setOrders] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("PENDING");
   const [loading, setLoading] = useState(true);
