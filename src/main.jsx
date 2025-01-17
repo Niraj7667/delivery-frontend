@@ -5,18 +5,18 @@ import App from './App.jsx'
 import React from 'react';
 import ReactDOM from 'react-dom/client'; // Make sure this import is correct
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Added Navigate for redirection
-import Login from '../components/login/login.jsx';
-import Signup from '../components/signup/signup.jsx';
-import RestaurantLogin from '../components/login/restaurantLogin.jsx';
-import RestaurantSignup from '../components/signup/restaurantSignup.jsx';
-import LandingPage from '../components/landing/landingPage.jsx';
-import UserDashboard from '../components/dashboard/userDashboard.jsx';
-import RestaurantDashboard from '../components/dashboard/restaurantDashboard.jsx';
-import MenuManagement from '../components/restaurantManage/menuManagement.jsx';
-import OrderManagement from '../components/restaurantManage/orderManagement.jsx';
-import Menu from '../components/menu/menu.jsx';
-import OrdersWithCategories from '../components/dashboard/UserOrders.jsx';
-import { PublicMenu } from '../components/restaurantManage/qrCode.jsx';
+import Login from './components/login/login.jsx';
+import Signup from './components/signup/signup.jsx';
+import RestaurantLogin from './components/login/restaurantLogin.jsx';
+import RestaurantSignup from './components/signup/restaurantSignup.jsx';
+import LandingPage from './components/landing/landingPage.jsx';
+import UserDashboard from './components/dashboard/userDashboard.jsx';
+import RestaurantDashboard from './components/dashboard/restaurantDashboard.jsx';
+import MenuManagement from './components/restaurantManage/menuManagement.jsx';
+import OrderManagement from './components/restaurantManage/orderManagement.jsx';
+import Menu from './components/menu/menu.jsx';
+import OrdersWithCategories from './components/dashboard/UserOrders.jsx';
+import { PublicMenu } from './components/restaurantManage/qrCode.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
