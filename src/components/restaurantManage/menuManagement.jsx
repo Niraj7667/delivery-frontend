@@ -13,7 +13,7 @@ const MenuManagement = () => {
     name: '',
     description: '',
     price: '',
-    image: '',
+    image: null, // Changed from a string to null for file handling
     category: '',
     dietType: '',
     preparationTime: ''
@@ -101,25 +101,37 @@ const MenuManagement = () => {
     const restauranttoken = localStorage.getItem('restauranttoken');
     
     try {
+      // Prepare form data for file upload
+      const data = new FormData();
+      data.append('name', formData.name);
+      data.append('description', formData.description);
+      data.append('price', formData.price);
+      data.append('category', formData.category);
+      data.append('dietType', formData.dietType);
+      data.append('preparationTime', formData.preparationTime);
+      data.append('restaurantId', restaurantId);
+      if (formData.image) {
+        data.append('image', formData.image); // Append image file
+      }
+
       if (editingItem) {
         await axios.put(`${import.meta.env.VITE_API_URL}/menu/updateitems/${editingItem.id}`, 
-          formData,
+          data,
           {
             headers: {
-              Authorization: `restauranttoken ${restauranttoken}`
+              Authorization: `restauranttoken ${restauranttoken}`,
+              'Content-Type': 'multipart/form-data' // Required for file uploads
             }
           }
         );
         showSuccess('Item updated successfully!');
       } else {
         await axios.post(`${import.meta.env.VITE_API_URL}/menu/additems`,
-          {
-            ...formData,
-            restaurantId
-          },
+          data,
           {
             headers: {
-              Authorization: `restauranttoken ${restauranttoken}`
+              Authorization: `restauranttoken ${restauranttoken}`,
+              'Content-Type': 'multipart/form-data' // Required for file uploads
             }
           }
         );
@@ -133,7 +145,7 @@ const MenuManagement = () => {
         name: '',
         description: '',
         price: '',
-        image: '',
+        image: null, // Reset to null
         category: '',
         dietType: '',
         preparationTime: ''
@@ -227,13 +239,13 @@ const MenuManagement = () => {
                 className="w-full p-2 border rounded"
                 required
               />
+              {/* Updated input for image file */}
               <input
-                type="text"
-                placeholder="Image URL"
-                value={formData.image}
-                onChange={(e) => setFormData({...formData, image: e.target.value})}
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
                 className="w-full p-2 border rounded"
-                required
+                required={!editingItem} // Image required only for new items
               />
               <input
                 type="text"
@@ -277,7 +289,7 @@ const MenuManagement = () => {
                       name: '',
                       description: '',
                       price: '',
-                      image: '',
+                      image: null, // Reset to null
                       category: '',
                       dietType: '',
                       preparationTime: ''

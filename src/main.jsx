@@ -22,7 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Router>
       <Routes>
-      
+
       <Route path="/" element={<LandingPage />} />
       <Route path="/user/dashboard" element={<UserDashboard/>} />
       <Route path="/restaurant/dashboard" element={<RestaurantDashboard/>} />
