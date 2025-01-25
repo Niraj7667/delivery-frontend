@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { OrderForm } from "./order";
-import "./Menu.css";
+import "./menu.css";
 import { ImageIcon } from "lucide-react";
 
 const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAmount, onProceedToOrder }) => {
