@@ -49,7 +49,7 @@ const Login = () => {
   };
 
   const handleNavigateToSignup = () => {
-    navigate("/auth/signup");
+    navigate("/auth/user/signup");
   };
 
   return (
