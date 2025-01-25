@@ -58,7 +58,7 @@ const RestaurantSignup = () => {
       const { token } = response.data;
       localStorage.setItem("restauranttoken", token);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.withCredentials = true;
 
       setMessage(response.data.message);
       navigate("/restaurant/dashboard");

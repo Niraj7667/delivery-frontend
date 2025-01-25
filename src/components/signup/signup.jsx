@@ -55,7 +55,7 @@ const Signup = () => {
       const { token } = response.data;
       localStorage.setItem("usertoken", token);
 
-      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      axios.defaults.withCredentials = true;
 
       setMessage(response.data.message);
       navigate("/user/dashboard");
