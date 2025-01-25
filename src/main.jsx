@@ -15,7 +15,7 @@ import RestaurantDashboard from './components/dashboard/restaurantDashboard.jsx'
 import MenuManagement from './components/restaurantManage/menuManagement.jsx';
 import OrderManagement from './components/restaurantManage/orderManagement.jsx';
 import Menu from './components/menu/menu.jsx';
-import OrdersWithCategories from './components/dashboard/UserOrders.jsx';
+import OrdersWithCategories from './components/dashboard/userOrders.jsx';
 import { PublicMenu } from './components/restaurantManage/qrCode.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
