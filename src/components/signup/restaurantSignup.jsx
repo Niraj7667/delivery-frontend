@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import './auth.css';
+import "./signup.css"; // Reusing the same CSS file for consistency
 
 const RestaurantSignup = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +12,10 @@ const RestaurantSignup = () => {
     location: "",
     maxTables: "",
     openingHours: "",
+    otp: "",
   });
+
+  const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -24,6 +27,22 @@ const RestaurantSignup = () => {
     }));
   };
 
+  const handleSendOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/restaurant/signup/sendotp`,
+        { email: formData.email },
+        { withCredentials: true }
+      );
+      setMessage(response.data.message);
+      setOtpSent(true);
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message || "Failed to send OTP. Please try again."
+      );
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -31,15 +50,17 @@ const RestaurantSignup = () => {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/auth/restaurant/signup`,
         formData,
-        { withCredentials: true }
+        {
+          withCredentials: true,
+        }
       );
 
+      const { token } = response.data;
+      localStorage.setItem("restauranttoken", token);
+
+      axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
       setMessage(response.data.message);
-
-      // Store the restaurant token in localStorage
-      localStorage.setItem("restauranttoken", response.data.token);
-
-      // Redirect to the restaurant dashboard
       navigate("/restaurant/dashboard");
     } catch (error) {
       if (error.response && error.response.data.message) {
@@ -51,12 +72,12 @@ const RestaurantSignup = () => {
   };
 
   const handleNavigateToLogin = () => {
-    navigate('/auth/restaurant/login');
+    navigate("/auth/restaurant/login");
   };
 
   return (
-    <div className="signup-container">
-      <form className="signup-form" onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
         <h2>Restaurant Signup</h2>
 
         <div className="input-group">
@@ -79,6 +100,14 @@ const RestaurantSignup = () => {
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={handleSendOtp}
+            disabled={otpSent}
+            className="send-otp-button"
+          >
+            {otpSent ? "OTP Sent" : "Send OTP"}
+          </button>
         </div>
 
         <div className="input-group">
@@ -136,17 +165,32 @@ const RestaurantSignup = () => {
           />
         </div>
 
-        <button type="submit" className="signup-button">
+        {otpSent && (
+          <div className="input-group">
+            <label>OTP:</label>
+            <input
+              type="text"
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
+
+        <button type="submit" className="login-button">
           Sign Up
         </button>
       </form>
 
+      {message && <p>{message}</p>}
+
       <div className="login-row">
         <p>Already have an account?</p>
-        <button onClick={handleNavigateToLogin} className="login-button">Login</button>
+        <button onClick={handleNavigateToLogin} className="login-button">
+          Login
+        </button>
       </div>
-
-      {message && <p>{message}</p>}
     </div>
   );
 };

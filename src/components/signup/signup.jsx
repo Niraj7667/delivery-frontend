@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from 'react-router-dom';
-import './signup.css'; // Import the CSS file
+import { useNavigate } from "react-router-dom";
+import "./signup.css"; // Import the CSS file
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -9,8 +9,10 @@ const Signup = () => {
     email: "",
     password: "",
     phone: "",
+    otp: "",
   });
 
+  const [otpSent, setOtpSent] = useState(false);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -20,6 +22,22 @@ const Signup = () => {
       ...prevData,
       [name]: value,
     }));
+  };
+
+  const handleSendOtp = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/signup/sendotp`,
+        { email: formData.email },
+        { withCredentials: true }
+      );
+      setMessage(response.data.message);
+      setOtpSent(true);
+    } catch (error) {
+      setMessage(
+        error.response?.data?.message || "Failed to send OTP. Please try again."
+      );
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -40,7 +58,7 @@ const Signup = () => {
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
 
       setMessage(response.data.message);
-      navigate('user/dashboard');
+      navigate("/user/dashboard");
     } catch (error) {
       if (error.response && error.response.data.message) {
         setMessage(error.response.data.message);
@@ -51,7 +69,7 @@ const Signup = () => {
   };
 
   const handleNavigateToLogin = () => {
-    navigate('/auth/login');
+    navigate("/auth/user/login");
   };
 
   return (
@@ -79,6 +97,14 @@ const Signup = () => {
             onChange={handleChange}
             required
           />
+          <button
+            type="button"
+            onClick={handleSendOtp}
+            disabled={otpSent}
+            className="send-otp-button"
+          >
+            {otpSent ? "OTP Sent" : "Send OTP"}
+          </button>
         </div>
 
         <div className="input-group">
@@ -103,15 +129,31 @@ const Signup = () => {
           />
         </div>
 
-        <button type="submit" className="login-button">Sign Up</button>
+        {otpSent && (
+          <div className="input-group">
+            <label>OTP:</label>
+            <input
+              type="text"
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
+
+        <button type="submit" className="login-button">
+          Sign Up
+        </button>
       </form>
 
       {message && <p>{message}</p>}
 
-      {/* Text and Login button in one row */}
       <div className="login-row">
         <p>Already have an account?</p>
-        <button onClick={handleNavigateToLogin} className="login-button">Login</button>
+        <button onClick={handleNavigateToLogin} className="login-button">
+          Login
+        </button>
       </div>
     </div>
   );
