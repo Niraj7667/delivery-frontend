@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-
+import "./LandingPage.css"
 const LandingPage = () => {
   const navigate = useNavigate();
 
@@ -13,17 +13,17 @@ const LandingPage = () => {
 
       <section className="features">
         <div className="feature">
-          <img src="/images/online-delivery.png" alt="Online Delivery" />
+          <img src="../public/scooter.jpg" alt="Online Delivery" />
           <h2>Online Delivery</h2>
           <p>Order your favorite meals and get them delivered fast and fresh.</p>
         </div>
         <div className="feature">
-          <img src="/images/offline-dining.png" alt="Offline Dining" />
+          <img src="../public/dinein.png" alt="Offline Dining" />
           <h2>Offline Dining</h2>
           <p>Reserve tables or visit partner restaurants near you.</p>
         </div>
         <div className="feature">
-          <img src="/images/restaurant-management.png" alt="Restaurant Management" />
+          <img src="../public/restaura.png" alt="Restaurant Management" />
           <h2>Restaurant Signup</h2>
           <p>Empower your restaurant with online ordering and management tools.</p>
         </div>
@@ -32,13 +32,13 @@ const LandingPage = () => {
       <section className="qr-menu">
         <h2>QR Code Menu</h2>
         <div className="qr-content">
-          <img src="/images/qr-code.png" alt="QR Code Menu" />
+          <img src="../public/qrcodemenu.png" alt="QR Code Menu" />
           <div className="qr-description">
             <p>
               Revolutionize dining with our **QR Code Menu**! Allow customers to scan, browse, and
               order directly from their smartphones for a seamless and contactless experience.
             </p>
-            <button onClick={() => navigate("/restaurant/signup")} className="button primary">
+            <button onClick={() => navigate("auth/user/signup")} className="button primary">
               Get Started with QR Menu
             </button>
           </div>
