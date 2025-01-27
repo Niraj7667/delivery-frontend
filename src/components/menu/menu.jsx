@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { OrderForm } from "./order";
-import "./menu.css";
 import { ImageIcon } from "lucide-react";
+import "./menu.css";
 
 const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAmount, onProceedToOrder }) => {
+  const [expandedItems, setExpandedItems] = useState({});
+
+  const toggleItemExpansion = (itemId) => {
+    setExpandedItems((prev) => ({
+      ...prev,
+      [itemId]: !prev[itemId],
+    }));
+  };
+
   return (
     <>
       <h2 className="text-2xl font-bold mb-6">Menu Items</h2>
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div className="menu-items">
         {menuItems.map((item) => (
-          <div key={item.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="relative h-48 w-full">
+          <div key={item.id} className="menu-item" onClick={() => toggleItemExpansion(item.id)}>
+            <div className={`relative w-full transition-all ${expandedItems[item.id] ? 'h-auto' : 'h-24'}`}>
               {item.imageUrl ? (
                 <img
                   src={item.imageUrl}
@@ -29,33 +38,46 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
               )}
             </div>
             <div className="p-4">
-              <div className="mb-4">
-                <h3 className="text-lg font-semibold mb-2">{item.name}</h3>
-                <p className="text-gray-600 text-sm mb-2">{item.description}</p>
-                <p className="text-xl font-bold text-green-600">₹{item.price}</p>
+              <div className={`mb-4 ${expandedItems[item.id] ? '' : 'overflow-hidden text-ellipsis'}`}>
+                <h3 className={`text-lg font-semibold mb-2 ${expandedItems[item.id] ? '' : 'whitespace-nowrap'}`}>{item.name}</h3>
+                {expandedItems[item.id] && (
+                  <>
+                    {/* <p className="text-gray-600 text-sm mb-2">{item.description}</p> */}
+                    <p className="text-xl font-bold text-green-600">₹{item.price}</p>
+                  </>
+                )}
               </div>
-              <div className="flex items-center justify-between mt-4">
+              {expandedItems[item.id] && (
                 <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => handleQuantityChange(item.id, -1)}
-                    className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
-                    disabled={!selectedItems.find(i => i.id === item.id)?.quantity}
-                  >
-                    -
-                  </button>
-                  <span className="w-8 text-center">
-                    {selectedItems.find(i => i.id === item.id)?.quantity || 0}
-                  </span>
-                  <button
-                    onClick={() => handleQuantityChange(item.id, 1)}
-                    className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
-                  >
-                    +
-                  </button>
-                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleQuantityChange(item.id, -1);
+                  }}
+                  className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+                  disabled={!selectedItems.find((i) => i.id === item.id)?.quantity}
+                >
+                  -
+                </button>
+                <span className="w-8 text-center">
+                  {selectedItems.find((i) => i.id === item.id)?.quantity || 0}
+                </span>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleQuantityChange(item.id, 1);
+                  }}
+                  className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
+                >
+                  +
+                </button>
               </div>
+              
+              )}
             </div>
+            
           </div>
+          
         ))}
       </div>
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t">
@@ -102,10 +124,9 @@ const Menu = ({ restaurantId, onClose }) => {
         },
       });
       
-      // Assuming the API returns imageUrl field for each menu item
       const menuItemsWithImages = response.data.menuItems.map(item => ({
         ...item,
-        imageUrl: item.imageUrl || item.image // Handle both imageUrl and image fields for compatibility
+        imageUrl: item.imageUrl || item.image 
       }));
       
       setMenuItems(menuItemsWithImages);
@@ -171,7 +192,7 @@ const Menu = ({ restaurantId, onClose }) => {
   }
 
   return (
-    <div className="container mx-auto px-4 pb-32">
+    <div className="menu-container">
       {!showOrderForm ? (
         <MenuSelection
           menuItems={menuItems}
@@ -194,3 +215,4 @@ const Menu = ({ restaurantId, onClose }) => {
 };
 
 export default Menu;
+
