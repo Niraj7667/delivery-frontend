@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useState,useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import QRCodeGenerator from '../restaurantManage/qrCode';
 import axios from 'axios';
-
+import "./restaurantDashboard.css";
 
 const RestaurantDashboard = () => {
 
   const [menuItems, setMenuItems] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [showAddForm, setShowAddForm] = useState(false);
-    const [editingItem, setEditingItem] = useState(null);
-    const [restaurantId, setRestaurantId] = useState(null);
-    const [successMessage, setSuccessMessage] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
+  const [restaurantId, setRestaurantId] = useState(null);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -51,30 +51,19 @@ const RestaurantDashboard = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Restaurant Dashboard</h1>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <button>
-          <div
-            className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate('/restaurant/menu/manage')} // Absolute path
-          >
-            
-            <h2 className="text-xl font-semibold mb-2">Menu Management</h2>
-            <p className="text-gray-600">Add, update, or remove menu items for your restaurant</p>
-          </div>
+    <div className="dashboard-container">
+      <div className="dashboard-wrapper">
+        <h1 className="dashboard-title">Restaurant Dashboard</h1>
+
+        <div className="dashboard-grid">
+          <button className="dashboard-card" onClick={() => navigate('/restaurant/menu/manage')}>
+            <h2 className="card-title">Menu Management</h2>
+            <p className="card-description">Add, update, or remove menu items for your restaurant</p>
           </button>
 
-          <button>
-          <div 
-            className="bg-white p-6 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
-            onClick={() => navigate('/restaurant/order/manage')} // Absolute path
-          >
-            <h2 className="text-xl font-semibold mb-2">Order Management</h2>
-            <p className="text-gray-600">View and manage incoming orders and order history</p>
-          </div>
+          <button className="dashboard-card" onClick={() => navigate('/restaurant/order/manage')}>
+            <h2 className="card-title">Order Management</h2>
+            <p className="card-description">View and manage incoming orders and order history</p>
           </button>
         </div>
         <QRCodeGenerator restaurantId={restaurantId} />

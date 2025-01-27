@@ -1,0 +1,254 @@
+/* Root Variables */
+:root {
+    --primary-color: #ff6b35;
+    --secondary-color: #2ec4b6;
+    --accent-color: #ff9f1c;
+    --text-primary: #2d3748;
+    --text-secondary: #4a5568;
+    --bg-gradient-start: #f7fafc;
+    --bg-gradient-end: #edf2f7;
+  }
+  
+  /* Base Reset */
+  body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+  }
+  
+  /* Main Container */
+  .dashboard-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(120deg, var(--bg-gradient-start), var(--bg-gradient-end));
+    padding: 2rem;
+  }
+  
+  /* Header Styles */
+  .dashboard-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: fadeInDown 0.8s ease-out;
+  }
+  
+  .dashboard-title {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dashboard-title::after {
+    content: '';
+    position: absolute;
+    bottom: -0.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+  
+  .dashboard-title:hover::after {
+    width: 100px;
+  }
+  
+  /* Grid Layout */
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  @media (min-width: 768px) {
+    .dashboard-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* Card Styles */
+  .dashboard-card {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+    animation: pulse 0.6s ease-in-out;
+  }
+  
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+  
+  .dashboard-card:hover::before {
+    transform: translateX(100%);
+  }
+  
+  /* Card Content */
+  .card-icon {
+    width: 3rem;
+    height: 3rem;
+    background: var(--primary-color);
+    border-radius: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease;
+  }
+  
+  .dashboard-card:hover .card-icon {
+    transform: scale(1.1) rotate(5deg);
+  }
+  
+  .card-title {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+  }
+  
+  .dashboard-card:hover .card-title {
+    color: var(--primary-color);
+  }
+  
+  .card-description {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    transition: color 0.3s ease;
+  }
+  
+  /* QR Code Section */
+  .qr-code-section {
+    margin-top: 30px;
+    text-align: center;
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+  }
+  
+  .qr-code-section:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .qr-code-section img {
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .qr-code-section img:hover {
+    transform: rotate(-5deg) scale(1.1);
+  }
+  
+  /* Animations */
+  @keyframes fadeInDown {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Buttons */
+  .dashboard-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+  }
+  
+  .dashboard-button:hover {
+    background: #e65c2e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .dashboard-button:active {
+    transform: translateY(0);
+  }
+  
+  /* Loading Spinner */
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+  }
+  
+  /* Responsive Adjustments */
+  @media (max-width: 640px) {
+    .dashboard-title {
+      font-size: 2rem;
+    }
+  
+    .card-title {
+      font-size: 1.25rem;
+    }
+  
+    .dashboard-card {
+      padding: 1.5rem;
+    }
+  }
+  
