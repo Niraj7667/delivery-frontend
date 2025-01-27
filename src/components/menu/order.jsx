@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import './Order.css';
+import './order.css';
 
 export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, onBack }) => {
   const [orderDetails, setOrderDetails] = useState({
