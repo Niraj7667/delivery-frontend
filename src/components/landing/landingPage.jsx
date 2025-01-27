@@ -14,17 +14,17 @@ const LandingPage = () => {
 
       <section className="features">
         <div className="feature">
-          <img src="../public/scooter.jpg" alt="Online Delivery" />
+          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965549/scooter-1027350_1920_bs1njn.jpg" alt="Online Delivery" />
           <h2>Online Delivery</h2>
           <p>Order your favorite meals and get them delivered fast and fresh.</p>
         </div>
         <div className="feature">
-          <img src="../public/dinein.png" alt="Offline Dining" />
+          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965616/dinein_x1f8ni.png" alt="Offline Dining" />
           <h2>Offline Dining</h2>
           <p>Reserve tables or visit partner restaurants near you.</p>
         </div>
         <div className="feature">
-          <img src="../public/restaura.png" alt="Restaurant Management" />
+          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965652/restaura_yhqcgo.png" alt="Restaurant Management" />
           <h2>Restaurant Signup</h2>
           <p>Empower your restaurant with online ordering and management tools.</p>
         </div>
@@ -33,7 +33,7 @@ const LandingPage = () => {
       <section className="qr-menu">
         <h2>QR Code Menu</h2>
         <div className="qr-content">
-          <img src="../public/qrcodemenu.png" alt="QR Code Menu" />
+          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965677/qrcodemenu_cz4pa8.png" alt="QR Code Menu" />
           <div className="qr-description">
             <p>
               Revolutionize dining with our **QR Code Menu**! Allow customers to scan, browse, and
