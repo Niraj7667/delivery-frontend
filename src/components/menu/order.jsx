@@ -78,25 +78,33 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
       }
   
       if (orderDetails.orderType === "DINE_IN_ADVANCE") {
+        const selectedTime = new Date(orderDetails.mealTime);
+        const currentTime = new Date();
+        const minAllowedTime = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000); // 2 hours later
+        const maxAllowedTime = new Date();
+        maxAllowedTime.setDate(currentTime.getDate() + 10); // 10 days from now
+      
+        const selectedHour = selectedTime.getHours();
         if (!orderDetails.mealTime) {
-          setError("Please select meal time");
+          setError("Please select a meal time.");
+          return;
+        } else if (selectedTime < minAllowedTime) {
+          setError("Meal time must be at least 2 hours from now.");
+          return;
+        } else if (selectedTime > maxAllowedTime) {
+          setError("You can only book for the next 10 days.");
+          return;
+        } else if (selectedHour < 10 || selectedHour >= 22) {
+          setError("Meal time must be between 10:00 AM and 10:00 PM.");
           return;
         }
-        // Create order first with advance payment note
+        
+        // Create the order with 50% advance payment
         await createOrder("ONLINE_PAYMENT");
         alert(`Order placed successfully! Please pay ₹${(totalAmount * 0.5).toFixed(2)} at the restaurant.`);
         onClose();
-      } else if (orderDetails.paymentMethod === "ONLINE_PAYMENT") {
-        // Create order with full payment note
-        await createOrder("ONLINE_PAYMENT");
-        alert("Order placed successfully! Please pay the full amount online.");
-        onClose();
-      } else {
-        // For COD or PAY_AT_RESTAURANT, create order directly
-        await createOrder(orderDetails.paymentMethod);
-        alert("Order placed successfully!");
-        onClose();
       }
+      
     } catch (error) {
       setError(error.message);
     }
@@ -172,7 +180,7 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
             <option value="">Select Order Type</option>
             <option value="HOME_DELIVERY">Home Delivery</option>
             <option value="DINE_IN_ADVANCE">Dine In Advance</option>
-            <option value="TABLE_ORDER">Table Order</option>
+            {/* <option value="TABLE_ORDER">Table Order</option> */}
           </select>
         </div>
 
@@ -194,15 +202,39 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
             <input
               type="datetime-local"
               value={orderDetails.mealTime}
-              onChange={(e) => setOrderDetails({ ...orderDetails, mealTime: e.target.value })}
+              onChange={(e) => {
+                const selectedTime = new Date(e.target.value);
+                const currentTime = new Date();
+                const minAllowedTime = new Date(currentTime.getTime() + 2 * 60 * 60 * 1000); // 2 hours later
+                const maxAllowedTime = new Date();
+                maxAllowedTime.setDate(currentTime.getDate() + 10); // 10 days from now
+
+                const selectedHour = selectedTime.getHours();
+                if (selectedTime < minAllowedTime) {
+                  setError("Meal time must be at least 2 hours from now.");
+                } else if (selectedTime > maxAllowedTime) {
+                  setError("You can only book for the next 10 days.");
+                } else if (selectedHour < 10 || selectedHour >= 22) {
+                  setError("Meal time must be between 10:00 AM and 10:00 PM.");
+                } else {
+                  setError("");
+                  setOrderDetails({ ...orderDetails, mealTime: e.target.value });
+                }
+              }}
               className="form-input"
             />
+            {error && <div className="error-message">{error}</div>}
             <div className="info-box">
-              <span className="info-icon">ⓘ</span>
-              50% advance payment (₹{(totalAmount * 0.5).toFixed(2)}) is required
-            </div>
+          <span className="info-icon">ⓘ</span>
+          <div className="info-content">
+            <p>50% advance payment (₹{(totalAmount * 0.5).toFixed(2)}) is required</p>
+            <p className="time-note">• Booking hours: 10 AM to 10 PM</p>
+            <p className="time-note">• Must be booked at least 2 hours in advance</p>
+          </div>
+        </div>
           </div>
         )}
+
 
         {orderDetails.orderType && (
           <div className="form-section">
@@ -217,6 +249,11 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
                 <>
                   <option value="ONLINE_PAYMENT">Online Payment</option>
                   <option value="CASH_ON_DELIVERY">Cash on Delivery</option>
+                </>
+              )}
+              {orderDetails.orderType === "DINE_IN_ADVANCE" && (
+                <>
+                  <option value="ONLINE_PAYMENT">Online Payment</option>
                 </>
               )}
               {orderDetails.orderType === "TABLE_ORDER" && (
