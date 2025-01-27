@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import './Order.css';
 
 export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, onBack }) => {
   const [orderDetails, setOrderDetails] = useState({
@@ -145,349 +146,129 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
   
 
   return (
-    <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-6">Order Details</h2>
+    <div className="order-form-container">
+      <div className="order-form">
+        <h2 className="form-title">Complete Your Order</h2>
 
-      {error && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-          {error}
-        </div>
-      )}
-
-      <select
-        value={orderDetails.orderType}
-        onChange={(e) =>
-          setOrderDetails({
-            ...orderDetails,
-            orderType: e.target.value,
-            paymentMethod: "" // Reset payment method when order type changes
-          })
-        }
-        className="w-full p-2 border rounded"
-      >
-        <option value="">Select Order Type</option>
-        <option value="HOME_DELIVERY">Home Delivery</option>
-        <option value="DINE_IN_ADVANCE">Dine In Advance</option>
-        <option value="TABLE_ORDER">Table Order</option>
-      </select>
-
-      {orderDetails.orderType === "HOME_DELIVERY" && (
-        <textarea
-          placeholder="Delivery Address"
-          value={orderDetails.deliveryAddress}
-          onChange={(e) => setOrderDetails({ ...orderDetails, deliveryAddress: e.target.value })}
-          className="w-full p-2 border rounded mt-4 min-h-[100px]"
-        />
-      )}
-
-      {orderDetails.orderType === "DINE_IN_ADVANCE" && (
-        <div className="mt-4">
-          <input
-            type="datetime-local"
-            value={orderDetails.mealTime}
-            onChange={(e) => setOrderDetails({ ...orderDetails, mealTime: e.target.value })}
-            className="w-full p-2 border rounded"
-          />
-          <p className="text-sm text-gray-600 mt-2">
-            Note: 50% advance payment (₹{(totalAmount * 0.5).toFixed(2)}) is required
-          </p>
-        </div>
-      )}
-
-      {renderPaymentMethods()}
-
-      <div className="mt-6 p-4 bg-gray-50 rounded">
-        <h3 className="font-semibold mb-2">Order Summary</h3>
-        <p>Total Amount: ₹{totalAmount.toFixed(2)}</p>
-        {orderDetails.orderType === "DINE_IN_ADVANCE" && (
-          <p>Advance Payment (50%): ₹{(totalAmount * 0.5).toFixed(2)}</p>
+        {error && (
+          <div className="error-message">
+            {error}
+          </div>
         )}
-      </div>
 
-      <div className="mt-6 flex gap-4">
-        <button
-          onClick={handleOrderSubmit}
-          disabled={loading}
-          className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
-        >
-          {loading ? "Processing..." : "Confirm Order"}
-        </button>
-        <button
-          onClick={onBack}
-          disabled={loading}
-          className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 disabled:opacity-50"
-        >
-          Back to Menu
-        </button>
+        <div className="form-section">
+          <label className="input-label">Order Type</label>
+          <select
+            value={orderDetails.orderType}
+            onChange={(e) =>
+              setOrderDetails({
+                ...orderDetails,
+                orderType: e.target.value,
+                paymentMethod: ""
+              })
+            }
+            className="form-select"
+          >
+            <option value="">Select Order Type</option>
+            <option value="HOME_DELIVERY">Home Delivery</option>
+            <option value="DINE_IN_ADVANCE">Dine In Advance</option>
+            <option value="TABLE_ORDER">Table Order</option>
+          </select>
+        </div>
+
+        {orderDetails.orderType === "HOME_DELIVERY" && (
+          <div className="form-section">
+            <label className="input-label">Delivery Address</label>
+            <textarea
+              placeholder="Enter your complete delivery address"
+              value={orderDetails.deliveryAddress}
+              onChange={(e) => setOrderDetails({ ...orderDetails, deliveryAddress: e.target.value })}
+              className="form-textarea"
+            />
+          </div>
+        )}
+
+        {orderDetails.orderType === "DINE_IN_ADVANCE" && (
+          <div className="form-section">
+            <label className="input-label">Select Meal Time</label>
+            <input
+              type="datetime-local"
+              value={orderDetails.mealTime}
+              onChange={(e) => setOrderDetails({ ...orderDetails, mealTime: e.target.value })}
+              className="form-input"
+            />
+            <div className="info-box">
+              <span className="info-icon">ⓘ</span>
+              50% advance payment (₹{(totalAmount * 0.5).toFixed(2)}) is required
+            </div>
+          </div>
+        )}
+
+        {orderDetails.orderType && (
+          <div className="form-section">
+            <label className="input-label">Payment Method</label>
+            <select
+              value={orderDetails.paymentMethod}
+              onChange={(e) => setOrderDetails({ ...orderDetails, paymentMethod: e.target.value })}
+              className="form-select"
+            >
+              <option value="">Select Payment Method</option>
+              {orderDetails.orderType === "HOME_DELIVERY" && (
+                <>
+                  <option value="ONLINE_PAYMENT">Online Payment</option>
+                  <option value="CASH_ON_DELIVERY">Cash on Delivery</option>
+                </>
+              )}
+              {orderDetails.orderType === "TABLE_ORDER" && (
+                <>
+                  <option value="ONLINE_PAYMENT">Online Payment</option>
+                  <option value="PAY_AT_RESTAURANT">Pay at Restaurant</option>
+                </>
+              )}
+            </select>
+          </div>
+        )}
+
+        <div className="order-summary">
+          <h3 className="summary-title">Order Summary</h3>
+          <div className="summary-item">
+            <span>Total Amount</span>
+            <span className="amount">₹{totalAmount.toFixed(2)}</span>
+          </div>
+          {orderDetails.orderType === "DINE_IN_ADVANCE" && (
+            <div className="summary-item">
+              <span>Advance Payment (50%)</span>
+              <span className="amount">₹{(totalAmount * 0.5).toFixed(2)}</span>
+            </div>
+          )}
+        </div>
+
+        <div className="button-group">
+          <button
+            onClick={onBack}
+            disabled={loading}
+            className="button secondary"
+          >
+            Back to Menu
+          </button>
+          <button
+            onClick={handleOrderSubmit}
+            disabled={loading}
+            className="button primary"
+          >
+            {loading ? (
+              <span className="loading-spinner">
+                <span className="spinner"></span>
+                Processing...
+              </span>
+            ) : (
+              "Place Order"
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );
 };
 
 export default OrderForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React, { useState } from "react";
-// import axios from "axios";
-
-// export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, onBack }) => {
-//   const [orderDetails, setOrderDetails] = useState({
-//     orderType: "",
-//     deliveryAddress: "",
-//     mealTime: "",
-//     paymentMethod: ""
-//   });
-//   const [error, setError] = useState("");
-//   const [loading, setLoading] = useState(false);
-
-//   const handlePayment = async (amount) => {
-//     try {
-//       setLoading(true);
-//       // Create payment order
-//       const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/create`, {
-//         orderId: orderId, // You'll need to create the order first
-//         amount: amount
-//       });
-
-//       const options = {
-//         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
-//         amount: amount * 100,
-//         currency: "INR",
-//         name: "Restaurant Name",
-//         description: "Food Order Payment",
-//         order_id: response.data.id,
-//         handler: async (response) => {
-//           try {
-//             // Verify payment
-//             const verification = await axios.post(`${import.meta.env.VITE_API_URL}/api/payments/verify`, {
-//               orderId: orderId,
-//               razorpayOrderId: response.razorpay_order_id,
-//               razorpayPaymentId: response.razorpay_payment_id,
-//               razorpaySignature: response.razorpay_signature
-//             });
-
-//             if (verification.data.success) {
-//               alert("Payment successful! Order confirmed.");
-//               onClose();
-//             }
-//           } catch (error) {
-//             setError("Payment verification failed");
-//           }
-//         },
-//         prefill: {
-//           name: localStorage.getItem("userName"),
-//           email: localStorage.getItem("userEmail"),
-//           contact: localStorage.getItem("userPhone")
-//         },
-//         theme: {
-//           color: "#3399cc"
-//         }
-//       };
-
-//       const paymentObject = new window.Razorpay(options);
-//       paymentObject.open();
-//     } catch (error) {
-//       setError("Payment initialization failed");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const createOrder = async (paymentMethod) => {
-//     try {
-//       setLoading(true);
-//       const orderData = {
-//         restaurantId,
-//         items: selectedItems.map(item => ({
-//           menuItemId: item.id,
-//           quantity: item.quantity
-//         })),
-//         orderType: orderDetails.orderType,
-//         paymentMethod,
-//         totalAmount
-//       };
-
-//       if (orderDetails.orderType === "HOME_DELIVERY") {
-//         orderData.deliveryAddress = orderDetails.deliveryAddress;
-//       }
-
-//       if (orderDetails.orderType === "DINE_IN_ADVANCE") {
-//         orderData.mealTime = orderDetails.mealTime;
-//       }
-      
-      
-
-//       const response = await axios.post(`${import.meta.env.VITE_API_URL}/order/create`, orderData);
-//       return response.data;
-//     } catch (error) {
-//       throw new Error("Failed to create order");
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handleOrderSubmit = async () => {
-//     try {
-//       // Validation
-//       if (!orderDetails.orderType) {
-//         setError("Please select an order type");
-//         return;
-//       }
-
-//       if (orderDetails.orderType === "HOME_DELIVERY" && !orderDetails.deliveryAddress) {
-//         setError("Please enter delivery address");
-//         return;
-//       }
-
-//       if (orderDetails.orderType === "DINE_IN_ADVANCE") {
-//         if (!orderDetails.mealTime) {
-//           setError("Please select meal time");
-//           return;
-//         }
-//         // Create order first
-//         const order = await createOrder("ONLINE_PAYMENT");
-//         // Process 50% payment
-//         await handlePayment(totalAmount * 0.5);
-//       } else if (orderDetails.paymentMethod === "ONLINE_PAYMENT") {
-//         // Create order first
-//         const order = await createOrder("ONLINE_PAYMENT");
-//         // Process full payment
-//         await handlePayment(totalAmount);
-//       } else {
-//         // For COD or PAY_AT_RESTAURANT, create order directly
-//         await createOrder(orderDetails.paymentMethod);
-//         alert("Order placed successfully!");
-//         onClose();
-//       }
-//     } catch (error) {
-//       setError(error.message);
-//     }
-//   };
-
-//   // Show payment methods based on order type
-//   const renderPaymentMethods = () => {
-//     if (orderDetails.orderType === "HOME_DELIVERY") {
-//       return (
-//         <select
-//           value={orderDetails.paymentMethod}
-//           onChange={(e) => setOrderDetails({ ...orderDetails, paymentMethod: e.target.value })}
-//           className="w-full p-2 border rounded mt-4"
-//         >
-//           <option value="">Select Payment Method</option>
-//           <option value="ONLINE_PAYMENT">Online Payment</option>
-//           <option value="CASH_ON_DELIVERY">Cash on Delivery</option>
-//         </select>
-//       );
-//     }
-    
-//     if (orderDetails.orderType === "TABLE_ORDER") {
-//       return (
-//         <select
-//           value={orderDetails.paymentMethod}
-//           onChange={(e) => setOrderDetails({ ...orderDetails, paymentMethod: e.target.value })}
-//           className="w-full p-2 border rounded mt-4"
-//         >
-//           <option value="">Select Payment Method</option>
-//           <option value="ONLINE_PAYMENT">Online Payment</option>
-//           <option value="PAY_AT_RESTAURANT">Pay at Restaurant</option>
-//         </select>
-//       );
-//     }
-
-//     return null;
-//   };
-
-//   return (
-//     <div className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md">
-//       <h2 className="text-2xl font-bold mb-6">Order Details</h2>
-      
-//       {error && (
-//         <div className="mb-4 p-3 bg-red-100 text-red-700 rounded">
-//           {error}
-//         </div>
-//       )}
-      
-//       <select
-//         value={orderDetails.orderType}
-//         onChange={(e) => setOrderDetails({ 
-//           ...orderDetails, 
-//           orderType: e.target.value,
-//           paymentMethod: "" // Reset payment method when order type changes
-//         })}
-//         className="w-full p-2 border rounded"
-//       >
-//         <option value="">Select Order Type</option>
-//         <option value="HOME_DELIVERY">Home Delivery</option>
-//         <option value="DINE_IN_ADVANCE">Dine In Advance</option>
-//         <option value="TABLE_ORDER">Table Order</option>
-//       </select>
-
-//       {orderDetails.orderType === "HOME_DELIVERY" && (
-//         <textarea
-//           placeholder="Delivery Address"
-//           value={orderDetails.deliveryAddress}
-//           onChange={(e) => setOrderDetails({ ...orderDetails, deliveryAddress: e.target.value })}
-//           className="w-full p-2 border rounded mt-4 min-h-[100px]"
-//         />
-//       )}
-
-//       {orderDetails.orderType === "DINE_IN_ADVANCE" && (
-//         <div className="mt-4">
-//           <input
-//             type="datetime-local"
-//             value={orderDetails.mealTime}
-//             onChange={(e) => setOrderDetails({ ...orderDetails, mealTime: e.target.value })}
-//             className="w-full p-2 border rounded"
-//           />
-//           <p className="text-sm text-gray-600 mt-2">
-//             Note: 50% advance payment (₹{(totalAmount * 0.5).toFixed(2)}) is required
-//           </p>
-//         </div>
-//       )}
-
-//       {renderPaymentMethods()}
-
-//       <div className="mt-6 p-4 bg-gray-50 rounded">
-//         <h3 className="font-semibold mb-2">Order Summary</h3>
-//         <p>Total Amount: ₹{totalAmount.toFixed(2)}</p>
-//         {orderDetails.orderType === "DINE_IN_ADVANCE" && (
-//           <p>Advance Payment (50%): ₹{(totalAmount * 0.5).toFixed(2)}</p>
-//         )}
-//       </div>
-
-//       <div className="mt-6 flex gap-4">
-//         <button
-//           onClick={handleOrderSubmit}
-//           disabled={loading}
-//           className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 disabled:opacity-50"
-//         >
-//           {loading ? "Processing..." : "Confirm Order"}
-//         </button>
-//         <button
-//           onClick={onBack}
-//           disabled={loading}
-//           className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded hover:bg-gray-300 disabled:opacity-50"
-//         >
-//           Back to Menu
-//         </button>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default OrderForm;
