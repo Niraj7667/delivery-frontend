@@ -1,5 +1,99 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './menuManagement.css';
+
+const MenuModal = ({ show, onClose, editingItem, onSubmit, formData, setFormData }) => {
+  if (!show) return null;
+
+  return (
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal-content" onClick={e => e.stopPropagation()}>
+        <div className="modal-header">
+          <h2>{editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}</h2>
+          <button className="modal-close" onClick={onClose}>&times;</button>
+        </div>
+        <form onSubmit={onSubmit}>
+          <div className="form-group">
+            <input
+              type="text"
+              placeholder="Name"
+              value={formData.name}
+              onChange={(e) => setFormData({...formData, name: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <textarea
+              placeholder="Description"
+              value={formData.description}
+              onChange={(e) => setFormData({...formData, description: e.target.value})}
+              required
+            />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <input
+                type="number"
+                placeholder="Price"
+                value={formData.price}
+                onChange={(e) => setFormData({...formData, price: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="number"
+                placeholder="Preparation Time (minutes)"
+                value={formData.preparationTime}
+                onChange={(e) => setFormData({...formData, preparationTime: e.target.value})}
+                required
+              />
+            </div>
+          </div>
+          <div className="form-group">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
+              required={!editingItem}
+              className="file-input"
+            />
+          </div>
+          <div className="form-row">
+            <div className="form-group">
+              <input
+                type="text"
+                placeholder="Category"
+                value={formData.category}
+                onChange={(e) => setFormData({...formData, category: e.target.value})}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <select
+                value={formData.dietType}
+                onChange={(e) => setFormData({...formData, dietType: e.target.value})}
+                required
+              >
+                <option value="">Select Diet Type</option>
+                <option value="Vegetarian">Vegetarian</option>
+                <option value="Non-Vegetarian">Non-Vegetarian</option>
+              </select>
+            </div>
+          </div>
+          <div className="form-actions">
+            <button type="submit" className="btn-primary">
+              {editingItem ? 'Update Item' : 'Add Item'}
+            </button>
+            <button type="button" className="btn-secondary" onClick={onClose}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 const MenuManagement = () => {
   const [menuItems, setMenuItems] = useState([]);
@@ -178,159 +272,93 @@ const MenuManagement = () => {
   };
 
   if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-xl">Loading...</div>
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+      <div className="loading-text">Loading...</div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Success Message */}
+    <div className="menu-contain">
+      <div className="menu-content">
         {successMessage && (
-          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4">
-            {successMessage}
-          </div>
+          <div className="alert success">{successMessage}</div>
         )}
 
-        {/* Error Message */}
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4">
-            {error}
-          </div>
+          <div className="alert error">{error}</div>
         )}
 
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">Menu Management</h1>
+        <div className="header">
+          <h1>Menu Management</h1>
           <button
             onClick={() => setShowAddForm(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+            className="btn-primary"
           >
             Add New Item
           </button>
         </div>
+          
+         
 
-        {(showAddForm || editingItem) && (
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-xl font-semibold mb-4">
-              {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <input
-                type="text"
-                placeholder="Name"
-                value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              />
-              <textarea
-                placeholder="Description"
-                value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              />
-              <input
-                type="number"
-                placeholder="Price"
-                value={formData.price}
-                onChange={(e) => setFormData({...formData, price: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              />
-              {/* Updated input for image file */}
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => setFormData({...formData, image: e.target.files[0]})}
-                className="w-full p-2 border rounded"
-                required={!editingItem} // Image required only for new items
-              />
-              <input
-                type="text"
-                placeholder="Category"
-                value={formData.category}
-                onChange={(e) => setFormData({...formData, category: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              />
-              <select
-                value={formData.dietType}
-                onChange={(e) => setFormData({...formData, dietType: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              >
-                <option value="">Select Diet Type</option>
-                <option value="Vegetarian">Vegetarian</option>
-                <option value="Non-Vegetarian">Non-Vegetarian</option>
-              </select>
-              <input
-                type="number"
-                placeholder="Preparation Time (minutes)"
-                value={formData.preparationTime}
-                onChange={(e) => setFormData({...formData, preparationTime: e.target.value})}
-                className="w-full p-2 border rounded"
-                required
-              />
-              <div className="flex gap-4">
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-                >
-                  {editingItem ? 'Update Item' : 'Add Item'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowAddForm(false);
-                    setEditingItem(null);
-                    setFormData({
-                      name: '',
-                      description: '',
-                      price: '',
-                      image: null, // Reset to null
-                      category: '',
-                      dietType: '',
-                      preparationTime: ''
-                    });
-                  }}
-                  className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+        <MenuModal 
+          show={showAddForm || editingItem !== null}
+          onClose={() => {
+            setShowAddForm(false);
+            setEditingItem(null);
+            setFormData({
+              name: '',
+              description: '',
+              price: '',
+              image: null,
+              category: '',
+              dietType: '',
+              preparationTime: ''
+            });
+          }}
+          editingItem={editingItem}
+          onSubmit={handleSubmit}
+          formData={formData}
+          setFormData={setFormData}
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="menu-grid">
           {menuItems.map((item) => (
-            <div key={item.id} className="bg-white p-6 rounded-lg shadow-md">
-              <img src={item.image} alt={item.name} className="w-full h-48 object-cover rounded mb-4"/>
-              <h3 className="text-xl font-semibold mb-2">{item.name}</h3>
-              <p className="text-gray-600 mb-2">{item.description}</p>
-              <p className="text-lg font-bold mb-2">₹{item.price}</p>
-              <p className="text-sm text-gray-500 mb-4">
-                {item.category} • {item.dietType} • {item.preparationTime} mins
-              </p>
-              <div className="flex gap-4">
-                <button
-                  onClick={() => {
-                    setEditingItem(item);
-                    setFormData(item);
-                    setShowAddForm(true);
-                  }}
-                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(item.id)}
-                  className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
+            <div key={item.id} className="menu-card">
+              <div className="menu-card-image">
+                <img src={item.image} alt={item.name} />
+                {item.dietType === 'Vegetarian' ? (
+                  <span className="diet-badge veg"></span>
+                ) : (
+                  <span className="diet-badge non-veg"></span>
+                )}
+              </div>
+              <div className="menu-card-content">
+                <h3>{item.name}</h3>
+                <p className="description">{item.description}</p>
+                <div className="price-time">
+                  <span className="price">₹{item.price}</span>
+                  <span className="prep-time">{item.preparationTime} mins</span>
+                </div>
+                <div className="category">{item.category}</div>
+                <div className="card-actions">
+                  <button
+                    onClick={() => {
+                      setEditingItem(item);
+                      setFormData(item);
+                      setShowAddForm(true);
+                    }}
+                    className="btn-edit"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(item.id)}
+                    className="btn-delete"
+                  >
+                    Delete
+                  </button>
+                </div>
               </div>
             </div>
           ))}
