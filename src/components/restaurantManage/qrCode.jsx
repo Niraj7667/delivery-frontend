@@ -96,6 +96,7 @@ export const PublicMenu = () => {
           ...item,
           imageUrl: item.imageUrl || item.image
         }));
+        console.log(response);
         setMenuItems(menuItemsWithImages);
         setLoading(false);
       } catch (error) {
@@ -157,14 +158,14 @@ export const PublicMenu = () => {
             <div className="card-content">
               <h3 className="card-title">
                 {item.name}
-                <span className="veg-nonveg-tag veg-tag" /> {/* Add logic for veg/non-veg */}
+                <span className={`veg-nonveg-tag ${item.dietType == "Vegetarian" ? 'veg-tag' : 'nonveg-tag'}`} /> {/* Add logic for veg/non-veg */}
               </h3>
               <p className="card-description">{item.description}</p>
               <div className="flex justify-between items-center">
-                <span className="price-tag">{item.price}</span>
-                <button className="add-to-cart-btn">
+                <span className="price-tag">₹{item.price}</span>
+                {/* <button className="add-to-cart-btn">
                   <span>Add +</span>
-                </button>
+                </button> */}
               </div>
             </div>
           </div>
