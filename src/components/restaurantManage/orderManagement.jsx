@@ -59,8 +59,21 @@ const OrderManagement = () => {
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
-  if (error) return <div className="error">{error}</div>;
+  if (loading) {
+    return (
+      <div className="loading-spinner">
+        <div className="spinner"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-message">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="orders-container">
