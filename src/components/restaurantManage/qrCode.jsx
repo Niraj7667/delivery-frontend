@@ -85,6 +85,7 @@ export const PublicMenu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [restaurantName, setRestaurantName] = useState(""); // Add state for restaurant name
 
   const restaurantId = window.location.pathname.split('/').pop();
 
@@ -96,7 +97,8 @@ export const PublicMenu = () => {
           ...item,
           imageUrl: item.imageUrl || item.image
         }));
-        console.log(response);
+        
+        setRestaurantName(response.data.restaurantName);
         setMenuItems(menuItemsWithImages);
         setLoading(false);
       } catch (error) {
@@ -127,7 +129,7 @@ export const PublicMenu = () => {
   return (
     <div className="public-menu-container">
       <div className="restaurant-header">
-        <h1>Restaurant Name</h1>
+        <h1>{restaurantName}</h1>
         <p className="restaurant-location">📍 Location | 🕒 11 AM - 11 PM</p>
       </div>
 
