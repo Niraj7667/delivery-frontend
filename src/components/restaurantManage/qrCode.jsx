@@ -32,7 +32,7 @@ export const QRCodeGenerator = ({ restaurantId }) => {
   return (
     <div className="qr-code-container">
       <div className="qr-code-content">
-        <div className="header">
+        <div className="headerr">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
