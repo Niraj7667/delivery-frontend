@@ -86,6 +86,8 @@ export const PublicMenu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [restaurantName, setRestaurantName] = useState(""); // Add state for restaurant name
+  const [location,setlocation] = useState("");
+  const [openingHours,setopeningHours] = useState("");
 
   const restaurantId = window.location.pathname.split('/').pop();
 
@@ -97,8 +99,10 @@ export const PublicMenu = () => {
           ...item,
           imageUrl: item.imageUrl || item.image
         }));
-        
+        console.log(response);
         setRestaurantName(response.data.restaurantName);
+        setlocation(response.data.restaurantLocation);
+        setopeningHours(response.data.restaurantOpeningHours);
         setMenuItems(menuItemsWithImages);
         setLoading(false);
       } catch (error) {
@@ -130,7 +134,7 @@ export const PublicMenu = () => {
     <div className="public-menu-container">
       <div className="restaurant-header">
         <h1>{restaurantName}</h1>
-        <p className="restaurant-location">📍 Location | 🕒 11 AM - 11 PM</p>
+        <p className="restaurant-location">📍 {location} | 🕒 {openingHours}</p>
       </div>
 
       <div className="menu-gridd">

@@ -25,7 +25,7 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-48 object-cover rounded-md"
                   onError={(e) => {
                     e.target.onerror = null;
                     e.target.src = '/api/placeholder/400/320';
