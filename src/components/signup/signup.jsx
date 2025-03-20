@@ -106,7 +106,21 @@ const Signup = () => {
             {otpSent ? "OTP Sent" : "Send OTP"}
           </button>
         </div>
+        
+        {otpSent && (
+          <div className="input-group">
+            <label>OTP:</label>
+            <input
+              type="text"
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
 
+        
         <div className="input-group">
           <label>Password:</label>
           <input
@@ -129,18 +143,7 @@ const Signup = () => {
           />
         </div>
 
-        {otpSent && (
-          <div className="input-group">
-            <label>OTP:</label>
-            <input
-              type="text"
-              name="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        )}
+        
 
         <button type="submit" className="login-button">
           Sign Up

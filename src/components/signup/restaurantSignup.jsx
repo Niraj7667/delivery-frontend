@@ -110,6 +110,19 @@ const RestaurantSignup = () => {
           </button>
         </div>
 
+        {otpSent && (
+          <div className="input-group">
+            <label>OTP:</label>
+            <input
+              type="text"
+              name="otp"
+              value={formData.otp}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        )}
+
         <div className="input-group">
           <label>Password:</label>
           <input
@@ -165,25 +178,13 @@ const RestaurantSignup = () => {
           />
         </div>
 
-        {otpSent && (
-          <div className="input-group">
-            <label>OTP:</label>
-            <input
-              type="text"
-              name="otp"
-              value={formData.otp}
-              onChange={handleChange}
-              required
-            />
-          </div>
-        )}
+        
 
         <button type="submit" className="login-button">
           Sign Up
         </button>
-      </form>
 
-      {message && <p>{message}</p>}
+        {message && <p>{message}</p>}
 
       <div className="login-row">
         <p>Already have an account?</p>
@@ -191,6 +192,10 @@ const RestaurantSignup = () => {
           Login
         </button>
       </div>
+      
+      </form>
+
+      
     </div>
   );
 };

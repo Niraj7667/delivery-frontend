@@ -43,8 +43,8 @@ const RestaurantLogin = () => {
   };
 
   return (
-    <div className="auth-container">
-      <form className="auth-form" onSubmit={handleSubmit}>
+    <div className="login-container">
+      <form className="login-form" onSubmit={handleSubmit}>
         <h2>Restaurant Login</h2>
         <div className="input-group">
           <label>Email:</label>
@@ -66,17 +66,24 @@ const RestaurantLogin = () => {
             required
           />
         </div>
-        <button type="submit" className="auth-button">
+        <button type="submit" className="login-button">
           Login
         </button>
+
+        {message && <p className="message">{message}</p>}
+        
+        <p>Don't have an account?</p>
+        <button
+          type="button"
+          className="signup-btn"
+          onClick={handleNavigateToSignup}
+        >
+          Go to Signup
+        </button>
+
       </form>
-
-      <div className="signup-row">
-        <p>New User?</p>
-        <button onClick={handleNavigateToSignup} className="signup-button">Sign Up</button>
-      </div>
-
-      {message && <p>{message}</p>}
+         
+      
     </div>
   );
 };
