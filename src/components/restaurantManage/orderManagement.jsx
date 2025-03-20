@@ -25,7 +25,8 @@ const OrderManagement = () => {
         axios.get(`${import.meta.env.VITE_API_URL}/order/restaurant`, { headers }),
         axios.get(`${import.meta.env.VITE_API_URL}/order/inactive`, { headers })
       ]);
-
+    console.log(activeResponse);
+    console.log(inactiveResponse);
       setOrders([...activeResponse.data, ...inactiveResponse.data]);
       setLoading(false);
     } catch (err) {
@@ -94,8 +95,17 @@ const OrderManagement = () => {
               <h3>Order #{order.orderId}</h3>
               <p>Customer: {order.userName}</p>
               <p>Phone: {order.phoneNumber}</p>
+              <p>Meal Time: {new Date(order.mealTime).toLocaleString()}</p>
+              <p>Order Type: {order.orderType.replace('_', ' ')}</p>
+              <p>Payment Method: {order.paymentMethod.replace('_', ' ')}</p>
+              {order.deliveryAddress && <p>Delivery Address: {order.deliveryAddress}</p>}
               <p className="amount">₹{order.totalAmount}</p>
               <p className={`status ${order.status.toLowerCase()}`}>{order.status}</p>
+              <ul>
+                {order.orderedItems.map((item, index) => (
+                  <li key={index}>{item.name} x {item.quantity}</li>
+                ))}
+              </ul>
               <div className="order-buttons">
                 {ACTIVE_STATUSES.includes(order.status) && (
                   <>
