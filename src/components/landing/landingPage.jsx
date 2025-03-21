@@ -30,22 +30,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      <section className="qr-menu">
-        <h2>QR Code Menu</h2>
-        <div className="qr-content">
-          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965677/qrcodemenu_cz4pa8.png" alt="QR Code Menu" />
-          <div className="qr-description">
-            <p>
-              Revolutionize dining with our **QR Code Menu**! Allow customers to scan, browse, and
-              order directly from their smartphones for a seamless and contactless experience.
-            </p>
-            <button onClick={() => navigate("auth/user/signup")} className="button primary">
-              Get Started with QR Menu
-            </button>
-          </div>
-        </div>
-      </section>
-
       <section className="cta-buttons">
         <h2>Join Us Today!</h2>
         <div className="buttons">
@@ -63,6 +47,24 @@ const LandingPage = () => {
           </button>
         </div>
       </section>
+
+      <section className="qr-menu">
+        <h2>QR Code Menu</h2>
+        <div className="qr-content">
+          <img src="https://res.cloudinary.com/dzenijk6q/image/upload/v1737965677/qrcodemenu_cz4pa8.png" alt="QR Code Menu" />
+          <div className="qr-description">
+            <p>
+              Revolutionize dining with our **QR Code Menu**! Allow customers to scan, browse, and
+              order directly from their smartphones for a seamless and contactless experience.
+            </p>
+            <button onClick={() => navigate("/user/dashboard")} className="button primary">
+              Get Started with QR Menu
+            </button>
+          </div>
+        </div>
+      </section>
+
+      
 
       <footer className="footer">
         <p>&copy; {new Date().getFullYear()} Foodie's Paradise. All rights reserved.</p>

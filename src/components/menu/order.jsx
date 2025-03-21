@@ -44,11 +44,11 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
   
       const token = localStorage.getItem('usertoken');
       if (!token) {
-        setError('No user token found');
+        setError('Please login or SignUp first');
         setLoading(false);
         return;
       }
-      console.log(token)
+      console.log(token);
       // Send the request to the determined endpoint
       const response = await axios.post(endpoint, orderData, {
         headers: {
@@ -103,6 +103,20 @@ export const OrderForm = ({ restaurantId, selectedItems, totalAmount, onClose, o
         await createOrder("ONLINE_PAYMENT");
         alert(`Order placed successfully! Please pay ₹${(totalAmount * 0.5).toFixed(2)} at the restaurant.`);
         onClose();
+        return;
+      }
+
+      if (orderDetails.orderType === "HOME_DELIVERY") {
+        if (!orderDetails.paymentMethod) {
+          setError("Please select a payment method.");
+          return;
+        }
+        
+        // Create order for home delivery
+        await createOrder(orderDetails.paymentMethod);
+        alert("Home delivery order placed successfully!");
+        onClose();
+        return;
       }
       
     } catch (error) {

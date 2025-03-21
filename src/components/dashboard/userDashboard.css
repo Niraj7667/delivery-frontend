@@ -6,25 +6,28 @@ body {
   width: 100vw;
 }
 
-.user-dashboard {
+.restaurant-list {
   text-align: center;
   width: 100%;
 }
 
 .header {
-  width: 100%;
+  width: 100vw;
+  max-width: 100vw;
   background: linear-gradient(135deg, #ff7e5f, #feb47b);
   color: white;
-  padding: 20px 0;
+  padding: 18px 20px; /* More padding for better touch */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
-  width: 85vw;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header h1 {
-  font-size: 2.5rem;
+  font-size: 2rem;
   margin: 0;
 }
 
@@ -42,6 +45,22 @@ body {
 .header .toggle-button:hover {
   background-color: #ffd2c1;
   transform: scale(1.05);
+}
+
+/* Responsive Header */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .header h1 {
+    font-size: 1.8rem;
+  }
+
+  .header .toggle-button {
+    margin-top: 10px;
+  }
 }
 
 .restaurant-list {

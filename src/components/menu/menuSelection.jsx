@@ -1,3 +1,109 @@
+// import React, { useState, useEffect } from "react";
+// import { ImageIcon } from "lucide-react";
+// import "./menu.css";
+
+// const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAmount, onProceedToOrder }) => {
+//   const [expandedItems, setExpandedItems] = useState({});
+
+//   const toggleItemExpansion = (itemId) => {
+//     setExpandedItems((prev) => ({
+//       ...prev,
+//       [itemId]: !prev[itemId],
+//     }));
+//   };
+
+//   return (
+//     <>
+//       <h2 className="text-2xl font-bold mb-6">Menu Items</h2>
+//       <div className="menu-items">
+//         {menuItems.map((item) => (
+//           <div key={item.id} className="menu-item" onClick={() => toggleItemExpansion(item.id)}>
+//             <div className={`relative w-full transition-all ${expandedItems[item.id] ? 'h-auto' : 'h-24'}`}>
+//               {item.imageUrl ? (
+//                 <img
+//                   src={item.imageUrl}
+//                   alt={item.name}
+//                   className="w-full h-48 object-cover rounded-md"
+//                   onError={(e) => {
+//                     e.target.onerror = null;
+//                     e.target.src = '/api/placeholder/400/320';
+//                   }}
+//                 />
+//               ) : (
+//                 <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+//                   <ImageIcon className="w-12 h-12 text-gray-400" />
+//                 </div>
+//               )}
+//             </div>
+//             <div className="p-4">
+//               <div className={`mb-4 ${expandedItems[item.id] ? '' : 'overflow-hidden text-ellipsis'}`}>
+//                 <h3 className={`text-lg font-semibold mb-2 ${expandedItems[item.id] ? '' : 'whitespace-nowrap'}`}>{item.name}</h3>
+//                 {expandedItems[item.id] && (
+//                   <>
+//                     {/* <p className="text-gray-600 text-sm mb-2">{item.description}</p> */}
+//                     <p className="text-xl font-bold text-green-600">₹{item.price}</p>
+//                   </>
+//                 )}
+//               </div>
+//               {expandedItems[item.id] && (
+//                 <div className="flex items-center space-x-2">
+//                 <button
+//                   onClick={(e) => {
+//                     e.stopPropagation();
+//                     handleQuantityChange(item.id, -1);
+//                   }}
+//                   className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300 disabled:opacity-50"
+//                   disabled={!selectedItems.find((i) => i.id === item.id)?.quantity}
+//                 >
+//                   -
+//                 </button>
+//                 <span className="w-8 text-center">
+//                   {selectedItems.find((i) => i.id === item.id)?.quantity || 0}
+//                 </span>
+//                 <button
+//                   onClick={(e) => {
+//                     e.stopPropagation();
+//                     handleQuantityChange(item.id, 1);
+//                   }}
+//                   className="px-3 py-1 bg-gray-200 rounded-lg hover:bg-gray-300"
+//                 >
+//                   +
+//                 </button>
+//               </div>
+              
+//               )}
+//             </div>
+            
+//           </div>
+          
+//         ))}
+//       </div>
+//       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t">
+//         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+//           <div>
+//             <h3 className="text-lg font-semibold">Order Summary</h3>
+//             <p className="text-gray-600">
+//               Total Items: {selectedItems.reduce((sum, item) => sum + item.quantity, 0)}
+//             </p>
+//             <p className="text-xl font-bold text-green-600">
+//               Total Amount: ₹{totalAmount}
+//             </p>
+//           </div>
+//           <button
+//             onClick={onProceedToOrder}
+//             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+//           >
+//             Proceed to Order
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default MenuSelection;
+
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { OrderForm } from "./order";
@@ -95,8 +201,7 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
           </div>
           <button
             onClick={onProceedToOrder}
-            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 border border-green-800"
-
+            className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
           >
             Proceed to Order
           </button>
