@@ -14,7 +14,6 @@ body {
   width: 100%;
   background: linear-gradient(135deg, #ff7e5f, #feb47b);
   color: white;
-  padding: 15px 0;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
@@ -42,25 +41,6 @@ body {
   background-color: #ffd2c1;
   transform: scale(1.05);
 }
-
-
-
-/* Responsive Header */
-@media (max-width: 768px) {
-  .header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .header h1 {
-    font-size: 1.8rem;
-  }
-
-  .header .toggle-button {
-    margin-top: 10px;
-  }
-}
-
 
 .menu-items {
   display: flex;
