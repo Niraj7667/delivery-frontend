@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { OrderForm } from "./order";
 import { ImageIcon } from "lucide-react";
-import "./menu.css";
+
 import { useParams } from "react-router-dom";
  import { useNavigate } from "react-router-dom";
 
@@ -105,6 +105,8 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
     </>
   );
 };
+
+import "./menu.css";
 
 const Menu = ({  onClose }) => {
   const { restaurantId } = useParams();
