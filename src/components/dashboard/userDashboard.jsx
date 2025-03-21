@@ -28,27 +28,30 @@ const UserDashboard = () => {
 
   return (
     <div className="user-dashboard">
-
-      <div className="user-header">
-      <header className="header">
-        <h1>Welcome to Foodie's Paradise</h1>
-        <button onClick={() => navigate("/user/orders")} className="toggle-button">
-          View Orders
-        </button>
-      </header>
+      <div className="sticky-header-wrapper">
+        <header className="header">
+          <h1>Welcome to Foodie's Paradise</h1>
+          <button onClick={() => navigate("/user/orders")} className="toggle-button">
+            View Orders
+          </button>
+        </header>
       </div>
 
       <section className="restaurant-list">
         <h2>Restaurants</h2>
-        <ul>
+        <div className="restaurant-grid">
           {restaurants.map((restaurant) => (
-            <li key={restaurant.id} onClick={() => handleRestaurantSelect(restaurant.id)}>
+            <div 
+              key={restaurant.id} 
+              className="restaurant-card"
+              onClick={() => handleRestaurantSelect(restaurant.id)}
+            >
               <h3>{restaurant.name}</h3>
               <p>{restaurant.location}</p>
-              <span>Rating: {restaurant.rating.toFixed(1)}</span>
-            </li>
+              <span className="rating">Rating: {restaurant.rating.toFixed(1)}</span>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
       {message && <p className="error-message">{message}</p>}
