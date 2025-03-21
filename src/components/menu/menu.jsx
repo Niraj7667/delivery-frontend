@@ -206,13 +206,15 @@ const Menu = ({  onClose }) => {
 
   return (
     <div className="menu-container">
-
+      
+      <div className="user-header">
       <header className="header">
          <h1>Welcome to Foodie's Paradise</h1>
          <button onClick={() => navigate("/user/orders")} className="toggle-button">
           View Orders
          </button>
       </header>
+      </div>
 
       {!showOrderForm ? (
         <MenuSelection

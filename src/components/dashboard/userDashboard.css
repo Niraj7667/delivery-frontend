@@ -30,6 +30,15 @@ body {
   font-size: 2rem;
   margin: 0;
 }
+.user-header{
+  
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
 .header .toggle-button {
   background-color: white;
