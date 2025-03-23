@@ -1,192 +1,326 @@
-/* Order Management Container */
-.order-management {
-  min-height: 100vh;
-  background-color: #f3f4f6;
-  padding: 2rem;
-  font-family: Arial, sans-serif;
+/* Variables */
+:root {
+  --primary-color: #fc8019;
+  --secondary-color: #60b246;
+  --accent-color: #60b246;
+  --background-color: #f9f9f9;
+  --card-background: #ffffff;
+  --text-color: #3d4152;
+  --text-secondary: #686b78;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --border-color: #e9e9eb;
+  --success-color: #60b246;
+  --warning-color: #db7c38;
+  --danger-color: #ff5252;
 }
 
-.container {
+/* Sticky Header Styles */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background: white;
+  z-index: 100;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 0.8rem 2rem;
+}
+
+.sticky-header.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 0.5rem 2rem;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.restaurant-logo {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.restaurant-logo:hover {
+  transform: scale(1.05);
+}
+
+.logo-icon {
+  font-size: 1.8rem;
+  margin-right: 0.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.restaurant-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.quick {
+  color: var(--primary-color);
+}
+
+.bite {
+  color: var(--accent-color);
+  position: relative;
+}
+
+.bite::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--secondary-color);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.restaurant-name:hover .bite::after {
+  width: 120%;
+}
+
+.header-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.nav-button:hover {
+  background: var(--primary-color);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.nav-button.active {
+  background: var(--primary-color);
+  color: white;
+}
+
+/* Order Management Styles */
+.orders-container {
+  padding: 1rem 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-h1 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
+.orders-container h1 {
+  font-size: 1.8rem;
+  color: var(--text-color);
+  font-weight: 600;
+  position: relative;
+  margin-bottom: 2rem;
 }
 
-/* Status Tabs */
-.status-tabs {
+.orders-container h1::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background-color: var(--primary-color);
+  border-radius: 2px;
+}
+
+.category-tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  background-color: #ffffff;
-  border-radius: 0.5rem;
-  padding: 1rem;
+  gap: 0.5rem;
   margin-bottom: 1.5rem;
 }
 
-.tab-button {
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
+.category-tab {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 0.6rem 1rem;
+  border-radius: 2rem;
   cursor: pointer;
-  background-color: #f3f4f6;
-  color: #4b5563;
+  font-weight: 500;
+  color: var(--text-secondary);
   transition: all 0.2s ease;
 }
 
-.tab-button:hover {
-  background-color: #e5e7eb;
+.category-tab:hover {
+  background: #f0f0f0;
+  transform: translateY(-2px);
 }
 
-.tab-button.active {
-  background-color: #2563eb;
-  color: #ffffff;
+.category-tab.active {
+  background: var(--primary-color);
+  color: white;
+  border-color: var(--primary-color);
 }
 
-/* Order Cards */
 .orders-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
 }
 
 .order-card {
-  background: white;
+  background: var(--card-background);
   border-radius: 8px;
-  padding: 0.5rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
-  border-left: 6px solid;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .order-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px var(--shadow-color);
 }
 
-/* Order Status Colors - Left Border & Badge */
-.order-card.pending {
-  border-left-color: #ffc107;
-}
-.order-card.preparing {
-  border-left-color: #007bff;
-}
-.order-card.ready {
-  border-left-color: #28a745;
-}
-.order-card.completed {
-  border-left-color: #17a2b8;
-}
-.order.cancelled {
-  border-left-color: #dc3545;
+.order-card h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 1.2rem;
 }
 
-.status {
-  padding: 4px 8px;
-  border-radius: 4px;
+.order-card p {
+  margin: 0.5rem 0;
+  color: var(--text-color);
+}
+
+.order-card .amount {
   font-weight: bold;
-  font-size: 0.9em;
+  font-size: 1.1rem;
+  color: var(--primary-color);
 }
-.status.pending { background: #ffefa1; color: #856404; }
-.status.preparing { background: #d6e4ff; color: #004085; }
-.status.ready { background: #d4edda; color: #155724; }
-.status.completed { background: #c3e6cb; color: #155724; }
-.status.cancelled { background: #f8d7da; color: #721c24; }
 
-/* Order Header */
-.order-header {
+.order-card .status {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 1rem;
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin: 0.5rem 0;
+}
+
+.order-card .status.pending {
+  background-color: #ffe1b3;
+  color: #b27b16;
+}
+
+.order-card .status.preparing {
+  background-color: #cce5ff;
+  color: #0066cc;
+}
+
+.order-card .status.ready {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.order-card .status.completed {
+  background-color: #e2f5ea;
+  color: #0a7245;
+}
+
+.order-card .status.cancelled {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.order-card ul {
+  margin: 1rem 0;
+  padding-left: 1.2rem;
+}
+
+.order-card li {
+  margin-bottom: 0.3rem;
+}
+
+.order-buttons {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-around;
 }
 
-.order-details {
-  font-size: 0.95rem;
-  color: #555;
-}
-
-/* Buttons */
-.button-group {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.order-button {
-  padding: 8px 12px;
+.order-buttons button {
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: 0.2s;
-}
-
-.order-button:hover {
-  opacity: 0.8;
-}
-
-.order-button.start {
-  background: #007bff;
+  font-weight: 600;
+  background-color: var(--success-color);
   color: white;
+  transition: all 0.2s ease;
 }
 
-.order-button.ready {
-  background: #28a745;
-  color: white;
+.order-buttons button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
-.order-button.complete {
-  background: #17a2b8;
-  color: white;
-}
-
-.order-button.cancel {
-  background: #dc3545;
-  color: white;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .order-management {
-    padding: 1rem;
-  }
-  .order-header {
-    flex-direction: column;
-  }
-  .button-group {
-    flex-direction: column;
-  }
-  .order-button {
-    width: 100%;
-  }
+.order-buttons button.cancel {
+  background-color: var(--danger-color);
 }
 
 /* Loading Spinner */
 .loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-  
-  .spinner {
-    width: 40px;
-    height: 40px;
-    border: 4px solid #f3f3f3;
-    border-top: 4px solid #3498db;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 80vh;
+  flex-direction: column;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid var(--primary-color);
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+.loading::after {
+  content: "Loading orders...";
+  color: var(--text-color);
+  font-weight: 500;
 }
 
 /* Error Message */
@@ -198,4 +332,48 @@ h1 {
   border-radius: 0.5rem;
   margin: 1rem auto;
   max-width: 500px;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 768px) {
+  .sticky-header {
+    padding: 0.8rem 1rem;
+  }
+  
+  .restaurant-name {
+    font-size: 1.3rem;
+  }
+  
+  .nav-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .orders-container {
+    padding: 1rem;
+  }
+  
+  .orders-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .header-content {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .header-nav {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .sticky-header.scrolled {
+    padding-bottom: 0.8rem;
+  }
+  
+  .category-tabs {
+    justify-content: center;
+  }
 }

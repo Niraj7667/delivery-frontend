@@ -1,6 +1,49 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './menuManagement.css';
+import { useNavigate } from 'react-router-dom';
+
+// Restaurant Header Component
+const RestaurantHeader = ({ navigate }) => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    document.addEventListener('scroll', handleScroll);
+    return () => {
+      document.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
+  
+  return (
+    <header className={`sticky-header ${scrolled ? 'scrolled' : ''}`}>
+      <div className="header-content">
+        <div className="restaurant-logo">
+          <span className="logo-icon">🍔</span>
+          <h1 className="restaurant-name">
+            <span className="quick">Quick</span> <span className="bite">Bite</span>
+          </h1>
+        </div>
+        <nav className="header-nav">
+          
+          <button 
+            className="nav-button" 
+            onClick={() => navigate('/restaurant/order/manage')}
+          >
+            Orders
+          </button>
+          
+        </nav>
+      </div>
+    </header>
+  );
+};
 
 const MenuModal = ({ show, onClose, editingItem, onSubmit, formData, setFormData }) => {
   if (!show) return null;
@@ -95,7 +138,7 @@ const MenuModal = ({ show, onClose, editingItem, onSubmit, formData, setFormData
   );
 };
 
-const MenuManagement = () => {
+const MenuManagement = ({ navigate }) => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -272,96 +315,100 @@ const MenuManagement = () => {
   };
 
   if (loading) return (
-    <div className="loading-container">
-      <div className="loading-spinner"></div>
-      <div className="loading-text">Loading...</div>
+    <div>
+      <RestaurantHeader navigate={navigate} />
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <div className="loading-text">Loading...</div>
+      </div>
     </div>
   );
 
   return (
-    <div className="menu-contain">
-      <div className="menu-content">
-        {successMessage && (
-          <div className="alert success">{successMessage}</div>
-        )}
+    <div>
+      <RestaurantHeader navigate={navigate} />
+      <div className="menu-contain">
+        <div className="menu-content">
+          {successMessage && (
+            <div className="alert success">{successMessage}</div>
+          )}
 
-        {error && (
-          <div className="alert error">{error}</div>
-        )}
+          {error && (
+            <div className="alert error">{error}</div>
+          )}
 
-        <div className="header">
-          <h1>Menu Management</h1>
-          <button
-            onClick={() => setShowAddForm(true)}
-            className="btn-primary"
-          >
-            Add New Item
-          </button>
-        </div>
-          
-         
+          <div className="dashboard-header">
+            <h1>Menu Management</h1>
+            <button
+              onClick={() => setShowAddForm(true)}
+              className="btn-primary"
+            >
+              Add New Item
+            </button>
+          </div>
 
-        <MenuModal 
-          show={showAddForm || editingItem !== null}
-          onClose={() => {
-            setShowAddForm(false);
-            setEditingItem(null);
-            setFormData({
-              name: '',
-              description: '',
-              price: '',
-              image: null,
-              category: '',
-              dietType: '',
-              preparationTime: ''
-            });
-          }}
-          editingItem={editingItem}
-          onSubmit={handleSubmit}
-          formData={formData}
-          setFormData={setFormData}
-        />
+          <MenuModal 
+            show={showAddForm || editingItem !== null}
+            onClose={() => {
+              setShowAddForm(false);
+              setEditingItem(null);
+              setFormData({
+                name: '',
+                description: '',
+                price: '',
+                image: null,
+                category: '',
+                dietType: '',
+                preparationTime: ''
+              });
+            }}
+            editingItem={editingItem}
+            onSubmit={handleSubmit}
+            formData={formData}
+            setFormData={setFormData}
+          />
 
-        <div className="menu-grid">
-          {menuItems.map((item) => (
-            <div key={item.id} className="menu-card">
-              <div className="menu-card-image">
-                <img src={item.image} alt={item.name} />
-                {item.dietType === 'Vegetarian' ? (
-                  <span className="diet-badge veg"></span>
-                ) : (
-                  <span className="diet-badge non-veg"></span>
-                )}
-              </div>
-              <div className="menu-card-content">
-                <h3>{item.name}</h3>
-                <p className="description">{item.description}</p>
-                <div className="price-time">
-                  <span className="price">₹{item.price}</span>
-                  <span className="prep-time">{item.preparationTime} mins</span>
+          <div className="menu-grid">
+            {menuItems.map((item) => (
+              <div key={item.id} className="menu-card">
+                <div className="menu-card-image">
+                  <img src={item.image} alt={item.name} />
+                  {item.dietType === 'Vegetarian' ? (
+                    <span className="diet-badge veg"></span>
+                  ) : (
+                    <span className="diet-badge non-veg"></span>
+                  )}
                 </div>
-                <div className="category">{item.category}</div>
-                <div className="card-actions">
-                  <button
-                    onClick={() => {
-                      setEditingItem(item);
-                      setFormData(item);
-                      setShowAddForm(true);
-                    }}
-                    className="btn-edit"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="btn-delete"
-                  >
-                    Delete
-                  </button>
+                <div className="menu-card-content">
+                  <h3>{item.name}</h3>
+                  <p className="description">{item.description}</p>
+                  <div className="price-time">
+                    <span className="price">₹{item.price}</span>
+                    <span className="prep-time">{item.preparationTime} mins</span>
+                  </div>
+                  <div className="category">{item.category}</div>
+                  <div className="card-actions">
+                    <button
+                      onClick={() => {
+                        setEditingItem(item);
+                        setFormData(item);
+                        setShowAddForm(true);
+                      }}
+                      className="btn-edit"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="btn-delete"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </div>

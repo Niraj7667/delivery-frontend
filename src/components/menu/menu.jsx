@@ -1,10 +1,9 @@
+import "./menu.css";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { OrderForm } from "./order";
 import { ImageIcon } from "lucide-react";
-
-import { useParams } from "react-router-dom";
- import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAmount, onProceedToOrder }) => {
   const [expandedItems, setExpandedItems] = useState({});
@@ -18,7 +17,8 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
 
   return (
     <>
-      <h2 className="text-2xl font-bold mb-6">Menu Items</h2>
+      <h2 className="text-2xl font-bold mb-6"
+>Menu Items</h2>
       <div className="menu-items">
         {menuItems.map((item) => (
           <div key={item.id} className="menu-item" onClick={() => toggleItemExpansion(item.id)}>
@@ -44,7 +44,6 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
                 <h3 className={`text-lg font-semibold mb-2 ${expandedItems[item.id] ? '' : 'whitespace-nowrap'}`}>{item.name}</h3>
                 {expandedItems[item.id] && (
                   <>
-                    {/* <p className="text-gray-600 text-sm mb-2">{item.description}</p> */}
                     <p className="text-xl font-bold text-green-600">₹{item.price}</p>
                   </>
                 )}
@@ -74,12 +73,9 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
                   +
                 </button>
               </div>
-              
               )}
             </div>
-            
           </div>
-          
         ))}
       </div>
       <div className="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t">
@@ -96,7 +92,6 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
           <button
             onClick={onProceedToOrder}
             className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 border border-green-800"
-
           >
             Proceed to Order
           </button>
@@ -106,9 +101,7 @@ const MenuSelection = ({ menuItems, selectedItems, handleQuantityChange, totalAm
   );
 };
 
-import "./menu.css";
-
-const Menu = ({  onClose }) => {
+const Menu = ({ onClose }) => {
   const { restaurantId } = useParams();
   const [menuItems, setMenuItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
@@ -116,11 +109,24 @@ const Menu = ({  onClose }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [totalAmount, setTotalAmount] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchMenuItems();
-  }, [restaurantId]);
+    
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [restaurantId, scrolled]);
 
   const fetchMenuItems = async () => {
     try {
@@ -178,7 +184,7 @@ const Menu = ({  onClose }) => {
       setError("Please login or Signup");
       console.log(usertoken);
       return;
-  }
+    }
     setShowOrderForm(true);
   };
 
@@ -206,15 +212,25 @@ const Menu = ({  onClose }) => {
 
   return (
     <div className="menu-container">
-      
-      <div className="user-header">
-      <header className="header">
-         <h1>Welcome to Foodie's Paradise</h1>
-         <button onClick={() => navigate("/user/orders")} className="toggle-button">
-          View Orders
-         </button>
+      <header className={`sticky-header ${scrolled ? 'scrolled' : ''}`}>
+        <div className="header-content">
+          <div className="restaurant-logo">
+            <span className="logo-icon">🍔</span>
+            <h1 className="restaurant-name">
+              <span className="quick">Quick</span>
+              <span className="bite">Bite</span>
+            </h1>
+          </div>
+          <nav className="header-nav">
+            <button
+              className="nav-button"
+              onClick={() => navigate("/user/orders")}
+            >
+              View Orders
+            </button>
+          </nav>
+        </div>
       </header>
-      </div>
 
       {!showOrderForm ? (
         <MenuSelection
@@ -238,4 +254,3 @@ const Menu = ({  onClose }) => {
 };
 
 export default Menu;
-

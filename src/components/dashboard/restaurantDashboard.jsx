@@ -6,7 +6,6 @@ import axios from 'axios';
 import "./restaurantDashboard.css";
 
 const RestaurantDashboard = () => {
-
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,6 +13,7 @@ const RestaurantDashboard = () => {
   const [editingItem, setEditingItem] = useState(null);
   const [restaurantId, setRestaurantId] = useState(null);
   const [successMessage, setSuccessMessage] = useState('');
+  const [isScrolled, setIsScrolled] = useState(false);
 
   const navigate = useNavigate();
 
@@ -48,26 +48,71 @@ const RestaurantDashboard = () => {
     };
 
     getRestaurantId();
+
+    // Add scroll event listener for sticky header effect
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   return (
     <div className="dashboard-container">
-      <div className="dashboard-wrapper">
-        <h1 className="dashboard-title">Restaurant Dashboard</h1>
-
-        <div className="dashboard-grid">
-          <button className="dashboard-card" onClick={() => navigate('/restaurant/menu/manage')}>
-            <h2 className="card-title">Menu Management</h2>
-            <p className="card-description">Add, update, or remove menu items for your restaurant</p>
-          </button>
-
-          <button className="dashboard-card" onClick={() => navigate('/restaurant/order/manage')}>
-            <h2 className="card-title">Order Management</h2>
-            <p className="card-description">View and manage incoming orders and order history</p>
-          </button>
+      <header className={`sticky-header ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="header-content">
+          <div className="restaurant-logo">
+            <span className="logo-icon">🍔</span>
+            <h1 className="restaurant-name">
+              <span className="quick">Quick</span>
+              <span className="bite">Bite</span>
+            </h1>
+          </div>
+          <nav className="header-nav">
+            <button className="nav-button" onClick={() => navigate('/restaurant/menu/manage')}>Menu</button>
+            <button className="nav-button" onClick={() => navigate('/restaurant/order/manage')}>Orders</button>
+            <button className="nav-button" onClick={() => navigate('/restaurant/profile')}>Profile</button>
+          </nav>
         </div>
-        <QRCodeGenerator restaurantId={restaurantId} />
+      </header>
+
+      <div className="dashboard-header">
+        <h1 className="dashboard-title">Restaurant Dashboard</h1>
       </div>
+
+      <div className="dashboard-grid">
+        <div className="dashboard-card" onClick={() => navigate('/restaurant/menu/manage')}>
+          <div className="card-icon">
+            <span>🍽️</span>
+          </div>
+          <h2 className="card-title">Menu Management</h2>
+          <p className="card-description">Add, update, or remove menu items for your restaurant</p>
+        </div>
+
+        <div className="dashboard-card" onClick={() => navigate('/restaurant/order/manage')}>
+          <div className="card-icon">
+            <span>📋</span>
+          </div>
+          <h2 className="card-title">Order Management</h2>
+          <p className="card-description">View and manage incoming orders and order history</p>
+        </div>
+      </div>
+      
+      {restaurantId && (
+        <div className="qr-code-section">
+          <h2 className="card-title">Restaurant QR Code</h2>
+          <QRCodeGenerator restaurantId={restaurantId} />
+        </div>
+      )}
     </div>
   );
 };

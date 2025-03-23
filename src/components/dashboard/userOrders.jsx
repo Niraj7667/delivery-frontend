@@ -9,6 +9,7 @@ export const OrdersWithCategories = () => {
   const [selectedCategory, setSelectedCategory] = useState("PENDING");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [scrolled, setScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,6 +37,18 @@ export const OrdersWithCategories = () => {
     };
 
     fetchOrders();
+
+    // Add scroll event listener
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const categories = [
@@ -54,70 +67,119 @@ export const OrdersWithCategories = () => {
 
   if (loading) {
     return (
-      <div className="loading-spinner">
-        <div className="spinner"></div>
-      </div>
+      <>
+        <HeaderComponent navigate={navigate} scrolled={scrolled} />
+        <div className="loading-spinner">
+          <div className="spinner"></div>
+        </div>
+      </>
     );
   }
 
   if (error) {
-    return <div className="error-message">{error}</div>;
+    return (
+      <>
+        <HeaderComponent navigate={navigate} scrolled={scrolled} />
+        <div className="error-message">{error}</div>
+      </>
+    );
   }
 
   return (
-    <div className="orders-container">
-      {/* Back Button */}
-      <div className="back-button" onClick={() => navigate("/user/dashboard")}>
-        <ArrowLeft className="icon" color="black"/> Back to Dashboard
-      </div>
+    <>
+      <HeaderComponent navigate={navigate} scrolled={scrolled} />
+      
+      <div className="orders-container">
+        {/* Back Button */}
+        <div className="back-button" onClick={() => navigate("/user/dashboard")}>
+          <ArrowLeft className="icon" color="black"/> Back to Dashboard
+        </div>
 
-      {/* Category Tabs */}
-      <div className="category-tabs">
-        {categories.map((category) => (
-          <button
-            key={category.name}
-            onClick={() => setSelectedCategory(category.name)}
-            className={`category-tab ${selectedCategory === category.name ? "active" : ""}`}
+        {/* Category Tabs */}
+        <div className="category-tabs">
+          {categories.map((category) => (
+            <button
+              key={category.name}
+              onClick={() => setSelectedCategory(category.name)}
+              className={`category-tab ${selectedCategory === category.name ? "active" : ""}`}
+            >
+              <span className="category-name">{category.name}</span>
+              <span className="category-count">({category.count})</span>
+            </button>
+          ))}
+        </div>
+
+        {/* Orders List */}
+        <div className="orders-list">
+          {filteredOrders.map((order) => (
+            <Card key={order.id} className={`order-card ${order.status.toLowerCase()}`}>
+              <CardContent>
+                <div className="order-header">
+                  <h3>Order #{order.id?.slice(-6)}</h3>
+                  <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
+                </div>
+                <div className="order-details">
+                  <p>
+                    <strong>Items:</strong> {order.items?.map((item) => `${item.menuItem?.name} x ${item.quantity}`).join(", ")}
+                  </p>
+                  <p>
+                    <strong>Total:</strong> {formatCurrency(order.totalAmount)}
+                  </p>
+                  {order.restaurantName && (
+                    <p>
+                      <strong>Restaurant:</strong> {order.restaurantName}
+                    </p>
+                  )}
+                  {order.deliveryAddress && (
+                    <p>
+                      <strong>Delivery Address:</strong> {order.deliveryAddress}
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+          {filteredOrders.length === 0 && <div className="no-orders">No orders in this category</div>}
+        </div>
+      </div>
+    </>
+  );
+};
+
+// Header Component
+const HeaderComponent = ({ navigate, scrolled }) => {
+  return (
+    <div className={`sticky-header ${scrolled ? 'scrolled' : ''}`}>
+      <div className="header-content">
+        <div className="restaurant-logo" onClick={() => navigate('/user/dashboard')}>
+          <div className="logo-icon">🍔</div>
+          <h1 className="restaurant-name">
+            <span className="quick">Quick</span> <span className="bite">Bite</span>
+          </h1>
+        </div>
+        
+        <div className="header-nav">
+          <button 
+            className="nav-button active" 
+            onClick={() => navigate('/user/orders')}
           >
-            <span className="category-name">{category.name}</span>
-            <span className="category-count">({category.count})</span>
+            Orders
           </button>
-        ))}
+          <button 
+            className="nav-button" 
+            onClick={() => navigate('/user/dashboard')}
+          >
+            Dashboard
+          </button>
+        </div>
       </div>
-
-      {/* Orders List */}
-      <div className="orders-list">
-        {filteredOrders.map((order) => (
-          <Card key={order.id} className={`order-card ${order.status.toLowerCase()}`}>
-            <CardContent>
-              <div className="order-header">
-                <h3>Order #{order.id?.slice(-6)}</h3>
-                <span className={`status-badge ${order.status.toLowerCase()}`}>{order.status}</span>
-              </div>
-              <div className="order-details">
-                <p>
-                  <strong>Items:</strong> {order.items?.map((item) => `${item.menuItem?.name} x ${item.quantity}`).join(", ")}
-                </p>
-                <p>
-                  <strong>Total:</strong> {formatCurrency(order.totalAmount)}
-                </p>
-                {order.restaurantName && (
-                  <p>
-                    <strong>Restaurant:</strong> {order.restaurantName}
-                  </p>
-                )}
-                {order.deliveryAddress && (
-                  <p>
-                    <strong>Delivery Address:</strong> {order.deliveryAddress}
-                  </p>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-
-        {filteredOrders.length === 0 && <div className="no-orders">No orders in this category</div>}
-      </div>
+      
+      {/* <div className="breadcrumb">
+        <span onClick={() => navigate('/restaurant/order/manage')}>Order Management</span>
+        <span className="separator">›</span>
+        <span>Orders</span>
+      </div> */}
     </div>
   );
 };
