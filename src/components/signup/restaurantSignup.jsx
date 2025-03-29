@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import "./signup.css"; // Reusing the same CSS file for consistency
+import "./signup.css"; // Make sure this points to your CSS file
 
 const RestaurantSignup = () => {
   const [formData, setFormData] = useState({
@@ -79,106 +79,107 @@ const RestaurantSignup = () => {
     <div className="login-container">
       <form className="login-form" onSubmit={handleSubmit}>
         <h2>Restaurant Signup</h2>
-
-        <div className="input-group">
-          <label>Name:</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <button
-            type="button"
-            onClick={handleSendOtp}
-            disabled={otpSent}
-            className="send-otp-button"
-          >
-            {otpSent ? "OTP Sent" : "Send OTP"}
-          </button>
-        </div>
-
-        {otpSent && (
+        
+        <div className="form-grid">
           <div className="input-group">
-            <label>OTP:</label>
+            <label>Name:</label>
             <input
               type="text"
-              name="otp"
-              value={formData.otp}
+              name="name"
+              value={formData.name}
               onChange={handleChange}
               required
             />
           </div>
-        )}
 
-        <div className="input-group">
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Phone:</label>
+            <input
+              type="text"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-group full-width">
+            <label>Email:</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+            <button
+              type="button"
+              onClick={handleSendOtp}
+              disabled={otpSent}
+              className="send-otp-button"
+            >
+              {otpSent ? "OTP Sent" : "Send OTP"}
+            </button>
+          </div>
+
+          {otpSent && (
+            <div className="input-group full-width">
+              <label>OTP:</label>
+              <input
+                type="text"
+                name="otp"
+                value={formData.otp}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
+
+          <div className="input-group full-width">
+            <label>Password:</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-group full-width">
+            <label>Location:</label>
+            <input
+              type="text"
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Max Tables:</label>
+            <input
+              type="number"
+              name="maxTables"
+              value={formData.maxTables}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="input-group">
+            <label>Opening Hours:</label>
+            <input
+              type="text"
+              name="openingHours"
+              value={formData.openingHours}
+              onChange={handleChange}
+              required
+              placeholder="e.g., 9:00 AM - 10:00 PM"
+            />
+          </div>
         </div>
-
-        <div className="input-group">
-          <label>Phone:</label>
-          <input
-            type="text"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Location:</label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Max Tables:</label>
-          <input
-            type="number"
-            name="maxTables"
-            value={formData.maxTables}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="input-group">
-          <label>Opening Hours:</label>
-          <input
-            type="text"
-            name="openingHours"
-            value={formData.openingHours}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        
 
         <button type="submit" className="login-button">
           Sign Up
@@ -186,16 +187,13 @@ const RestaurantSignup = () => {
 
         {message && <p>{message}</p>}
 
-      <div className="login-row">
-        <p>Already have an account?</p>
-        <button onClick={handleNavigateToLogin} className="login-button">
-          Login
-        </button>
-      </div>
-      
+        <div className="login-row">
+          <p>Already have an account?</p>
+          <button onClick={handleNavigateToLogin} className="login-button">
+            Login
+          </button>
+        </div>
       </form>
-
-      
     </div>
   );
 };

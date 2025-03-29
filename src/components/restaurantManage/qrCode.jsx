@@ -85,11 +85,28 @@ export const PublicMenu = () => {
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [restaurantName, setRestaurantName] = useState(""); // Add state for restaurant name
-  const [location,setlocation] = useState("");
-  const [openingHours,setopeningHours] = useState("");
+  const [restaurantName, setRestaurantName] = useState(""); 
+  const [location, setLocation] = useState("");
+  const [openingHours, setOpeningHours] = useState("");
+  const [scrolled, setScrolled] = useState(false);
 
   const restaurantId = window.location.pathname.split('/').pop();
+
+  // Add scroll event listener for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   useEffect(() => {
     const fetchMenuItems = async () => {
@@ -101,8 +118,8 @@ export const PublicMenu = () => {
         }));
         console.log(response);
         setRestaurantName(response.data.restaurantName);
-        setlocation(response.data.restaurantLocation);
-        setopeningHours(response.data.restaurantOpeningHours);
+        setLocation(response.data.restaurantLocation);
+        setOpeningHours(response.data.restaurantOpeningHours);
         setMenuItems(menuItemsWithImages);
         setLoading(false);
       } catch (error) {
@@ -132,6 +149,18 @@ export const PublicMenu = () => {
 
   return (
     <div className="public-menu-container">
+      <header className={`sticky-header ${scrolled ? 'scrolled' : ''}`}>
+        <div className="header-content">
+          <div className="restaurant-logo">
+            <span className="logo-icon">🍔</span>
+            <h1 className="restaurant-name">
+              <span className="quick">Quick</span> <span className="bite">Bite</span>
+            </h1>
+          </div>
+          
+        </div>
+      </header>
+
       <div className="restaurant-header">
         <h1>{restaurantName}</h1>
         <p className="restaurant-location">📍 {location} | 🕒 {openingHours}</p>
@@ -164,7 +193,7 @@ export const PublicMenu = () => {
             <div className="card-content">
               <h3 className="card-title">
                 {item.name}
-                <span className={`veg-nonveg-tag ${item.dietType == "Vegetarian" ? 'veg-tag' : 'nonveg-tag'}`} /> {/* Add logic for veg/non-veg */}
+                <span className={`veg-nonveg-tag ${item.dietType === "Vegetarian" ? 'veg-tag' : 'nonveg-tag'}`} />
               </h3>
               <p className="card-description">{item.description}</p>
               <div className="flex justify-between items-center">

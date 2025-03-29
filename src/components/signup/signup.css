@@ -8,18 +8,21 @@
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
-    
+    overflow-y: auto; /* Enable vertical scrolling */
 }
 
 /* Form styling with enhanced aesthetics */
 .login-form {
     background-color: rgba(255, 255, 255, 0.95);
-    padding: 2.5rem;
+    padding: 2rem;
     border-radius: 16px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    width: 340px;
+    width: 100%;
+    max-width: 420px; /* Increased max-width */
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    margin-top: 10px;
+    margin: 20px 0;
+    overflow-y: auto; /* Enable scrolling within the form if needed */
+    max-height: 90vh; /* Limit maximum height */
 }
 
 .login-form:hover {
@@ -28,7 +31,7 @@
 }
 
 .login-form h2 {
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.5rem;
     color: #444;
     font-size: 1.8rem;
     text-align: center;
@@ -49,27 +52,39 @@
     border-radius: 3px;
 }
 
+/* Grid layout for form fields */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* For full-width fields */
+.full-width {
+    grid-column: span 2;
+}
+
 /* Input group styling with focus effects */
 .input-group {
-    margin-bottom: 1.4rem;
+    margin-bottom: 1rem;
     position: relative;
 }
 
 .input-group label {
     display: block;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.4rem;
     color: #555;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.3s;
 }
 
 .input-group input {
     width: 100%;
-    padding: 0.7rem 1rem;
+    padding: 0.6rem 0.8rem;
     border: 2px solid #e1e1e1;
     border-radius: 8px;
-    font-size: 1rem;
+    font-size: 0.95rem;
     background-color: #f9f9f9;
     color: #333;
     transition: all 0.3s;
@@ -90,13 +105,13 @@
 .send-otp-button {
     position: absolute;
     right: 10px;
-    top: 33px;
-    padding: 0.5rem 1rem;
+    top: 31px;
+    padding: 0.4rem 0.8rem;
     background: linear-gradient(to right, #6e8efb, #a777e3);
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     cursor: pointer;
     transition: all 0.3s;
 }
@@ -114,17 +129,17 @@
 
 /* Button styling with gradient and hover effects */
 .login-button {
-    padding: 0.85rem 1rem;
+    padding: 0.75rem 1rem;
     background: linear-gradient(to right, #6e8efb, #a777e3);
     color: white;
     border: none;
     border-radius: 8px;
-    font-size: 1.05rem;
+    font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.3s;
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.8rem;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
@@ -139,15 +154,14 @@
 }
 
 /* Message styling */
-.login-container p {
-    margin: 1rem 0;
-    padding: 0.7rem 1rem;
+.login-form p {
+    margin: 0.8rem 0;
+    padding: 0.6rem 0.8rem;
     background-color: #f8f9fa;
     border-left: 4px solid #6e8efb;
     border-radius: 4px;
     color: #444;
-    font-size: 0.95rem;
-    width: 340px;
+    font-size: 0.9rem;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
@@ -155,31 +169,31 @@
 .login-row {
     display: flex;
     align-items: center;
-    margin-top: 1.5rem;
+    justify-content: space-between;
+    margin-top: 1.2rem;
     background-color: rgba(255, 255, 255, 0.85);
-    padding: 1rem 1.5rem;
+    padding: 0.8rem 1rem;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
 }
 
 .login-row p {
-    margin: 0 1rem 0 0;
+    margin: 0;
     padding: 0;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     color: #555;
     border: none;
     background: none;
-    width: auto;
     box-shadow: none;
 }
 
 .login-row button {
-    padding: 0.5rem 1.2rem;
+    padding: 0.4rem 1rem;
     background: linear-gradient(to right, #6e8efb, #a777e3);
     color: white;
     border: none;
     border-radius: 6px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: all 0.3s;
     box-shadow: 0 4px 6px rgba(50, 50, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -194,28 +208,53 @@
 @media (max-width: 768px) {
     .login-form {
         width: 90%;
-        max-width: 340px;
-        padding: 2rem;
+        padding: 1.5rem;
     }
     
-    .login-container p {
-        width: 90%;
-        max-width: 340px;
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .full-width {
+        grid-column: span 1;
     }
     
     .login-row {
-        width: 90%;
-        max-width: 340px;
         flex-direction: column;
         text-align: center;
     }
     
     .login-row p {
-        margin: 0 0 1rem 0;
+        margin-bottom: 0.8rem;
     }
     
     .login-row button {
         width: 100%;
+    }
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
+    .login-form {
+        padding: 1.2rem;
+    }
+    
+    .login-form h2 {
+        font-size: 1.5rem;
+    }
+    
+    .input-group label {
+        font-size: 0.85rem;
+    }
+    
+    .input-group input {
+        padding: 0.5rem 0.7rem;
+        font-size: 0.9rem;
+    }
+    
+    .send-otp-button {
+        padding: 0.35rem 0.7rem;
+        font-size: 0.75rem;
     }
 }
 
